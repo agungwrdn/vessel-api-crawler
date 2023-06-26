@@ -35,7 +35,7 @@ const broadcastStokReport = async () => {
   let whatsAppMessage = `
 Selamat pagi,
 Yth. Bapak Direktur Pemasaran
-Bapk SVP PM PSO, PSO Wilayah Barat, Wilayah Timur Dan para VP
+Bapak SVP PM PSO, PSO Wilayah Barat, Wilayah Timur Dan para VP
 
 Menyampaiakan hasil report stok REKAN per tanggal ${moment().locale('id').format('DD MMMM YYYY')} 
 Rincian nasional:
