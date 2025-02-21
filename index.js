@@ -16,10 +16,6 @@ const contact = [
     name: 'Bhanio Gemilang Putakaz'
   },
   {
-    phone: '+6282143608440',
-    name: 'Multazam Arroihan Gusdiansyah'
-  },
-  {
     phone: '+6285335831672',
     name: 'Ilham Izzul Hadyan'
   },
@@ -56,10 +52,6 @@ const contact = [
     name: ''
   },
   {
-    phone: '+6282143616888',
-    name: ''
-  },
-  {
     phone: '+628164254012',
     name: ''
   },
@@ -82,7 +74,23 @@ const contact = [
   {
     phone: '+6282213892617',
     name: 'Farkhan'
-  }
+  },
+  {
+    phone: '+628125523497',
+    name: ''
+  },
+  {
+    phone: '+6281703066766',
+    name: ''
+  },
+  {
+    phone: '+6281342900343',
+    name: ''
+  },
+  {
+    phone: '+628125819016',
+    name: ''
+  },
 
 ]
 

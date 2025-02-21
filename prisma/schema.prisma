@@ -1,0 +1,2253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model VwDPCS_Pengecer {
+  ID                    String    @id(map: "PK_VwDPCS_Pengecer") @db.UniqueIdentifier
+  KodePengecer          String    @db.VarChar(50)
+  NamaPengecer          String    @db.VarChar(50)
+  IDDistributor         String    @db.UniqueIdentifier
+  CustomerNumber        String?   @db.VarChar(50)
+  NamaDistributor       String    @db.VarChar(50)
+  Pemilik               String?   @db.VarChar(50)
+  Alamat                String?   @db.VarChar(50)
+  IDPropinsi            String    @db.UniqueIdentifier
+  KodePropinsi          String?   @db.VarChar(8000)
+  NamaPropinsi          String    @db.VarChar(50)
+  IDKabupaten           String    @db.UniqueIdentifier
+  KodeKabupaten         String?   @db.VarChar(8000)
+  NamaKabupaten         String    @db.VarChar(100)
+  IDkecamatan           String    @db.UniqueIdentifier
+  KodeKecamatan         String?   @db.VarChar(8000)
+  NamaKecamatan         String    @db.VarChar(50)
+  IDDesa                String?   @db.UniqueIdentifier
+  NamaDesa              String?   @db.VarChar(50)
+  NomerTelepon          String?   @db.VarChar(50)
+  NomerHandphone        String?   @db.VarChar(50)
+  NomerFaksimil         String?   @db.VarChar(50)
+  NPWP                  String?   @db.VarChar(50)
+  SIUP                  String?   @db.VarChar(50)
+  SITU                  String?   @db.VarChar(50)
+  TDP                   String?   @db.VarChar(50)
+  PengecerAdministratif Boolean
+  Deleted               Boolean?
+  Aktif                 Boolean
+  KodeKP                String    @db.Char(3)
+  Lock                  Boolean
+  Keterangan            String?   @db.VarChar(Max)
+  UserDefined_01        String?   @db.VarChar(50)
+  UserDefined_02        String?   @db.VarChar(50)
+  UserDefined_03        String?   @db.VarChar(50)
+  UserDefined_04        String?   @db.VarChar(50)
+  UserDefined_05        String?   @db.VarChar(50)
+  CreatedBy             String?   @db.VarChar(100)
+  CreatedOn             DateTime? @db.DateTime
+  UpdatedBy             String?   @db.VarChar(100)
+  UpdatedOn             DateTime? @db.DateTime
+  KodePengecerWCM       String?   @db.VarChar(50)
+
+  @@map("_VwDPCS_Pengecer")
+}
+
+model VwDPCS_SmsPersediaanDistributor {
+  IDPropinsi       String?   @db.VarChar(100)
+  KodePropinsi     String?   @db.VarChar(8000)
+  NamaPropinsi     String?   @db.VarChar(50)
+  IDKabupaten      String?   @db.VarChar(100)
+  KodeKabupaten    String?   @db.VarChar(8000)
+  NamaKabupaten    String?   @db.VarChar(100)
+  IDDistributor    String?   @db.VarChar(100)
+  CustomerNumber   String?   @db.VarChar(50)
+  NamaDistributor  String?   @db.VarChar(50)
+  TanggalTransaksi DateTime? @db.DateTime
+  StokFisikUrea    Float
+  StokFisikNPK     Float
+  StokFisikOrganik Float
+  StokFisikZA      Float
+  StokFisikSP36    Float
+  NamaPetugas      String?   @db.VarChar(100)
+  NomorHandphone   String    @db.VarChar(50)
+  KodeKP           String?   @db.Char(3)
+  DisupplyDari     String?   @db.VarChar(100)
+  idnya            Int       @id(map: "PK_VwDPCS_SmsPersediaanDistributor") @default(autoincrement())
+
+  @@map("_VwDPCS_SmsPersediaanDistributor")
+}
+
+model VwDPCS_SmsPersediaanPengecer {
+  IDPropinsi       String?   @db.VarChar(100)
+  KodePropinsi     String?   @db.VarChar(8000)
+  NamaPropinsi     String?   @db.VarChar(50)
+  IDKabupaten      String?   @db.VarChar(100)
+  KodeKabupaten    String?   @db.VarChar(8000)
+  NamaKabupaten    String?   @db.VarChar(100)
+  IDKecamatan      String?   @db.VarChar(100)
+  KodeKecamatan    String?   @db.VarChar(8000)
+  NamaKecamatan    String?   @db.VarChar(50)
+  IDPengecer       String    @id(map: "PK_VwDPCS_SmsPersediaanPengecer") @db.VarChar(100)
+  KodePengecer     String?   @db.VarChar(50)
+  NamaPengecer     String?   @db.VarChar(50)
+  TanggalTransaksi DateTime? @db.DateTime
+  StokFisikUrea    Float?
+  StokFisikNPK     Float?
+  StokFisikOrganik Float?
+  StokFisikZA      Float?
+  StokFisikSP36    Float?
+  NamaPetugas      String?   @db.VarChar(100)
+  NomorHandphone   String    @db.VarChar(50)
+  KodeKP           String?   @db.Char(3)
+  IDDistributor    String?   @db.VarChar(100)
+  NamaDistributor  String?   @db.VarChar(50)
+  CustomerNumber   String?   @db.VarChar(50)
+  KodePengecerWCM  String?   @db.VarChar(50)
+
+  @@map("_VwDPCS_SmsPersediaanPengecer")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model VwDPCS_WilayahDistributor {
+  ID             String  @db.UniqueIdentifier
+  IDRekanan      String  @db.UniqueIdentifier
+  KodeRekanan    String  @db.VarChar(50)
+  CustomerNumber String? @db.VarChar(50)
+  NamaRekanan    String  @db.VarChar(50)
+  IDKab          String  @db.UniqueIdentifier
+  KodeKabupaten  String? @db.VarChar(8000)
+  NamaKabupaten  String  @db.VarChar(100)
+  IDKecamatan    String  @db.UniqueIdentifier
+  KodeKecamatan  String? @db.VarChar(8000)
+  NamaKecamatan  String  @db.VarChar(50)
+  UniqueCode     String  @db.VarChar(50)
+  IDPropinsi     String  @db.UniqueIdentifier
+  KodePropinsi   String? @db.VarChar(8000)
+  NamaPropinsi   String  @db.VarChar(50)
+  KodeKP         String  @db.Char(3)
+
+  @@map("_VwDPCS_WilayahDistributor")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model aae {
+  npk             String? @db.NVarChar(255)
+  nama            String? @db.NVarChar(255)
+  telp            String? @db.NVarChar(255)
+  id              BigInt? @unique(map: "id")
+  jabatan         String? @db.NVarChar(50)
+  file_photo      String? @db.NVarChar(50)
+  kode_perusahaan String? @db.NVarChar(50)
+  kabupaten       String? @db.NVarChar(50)
+
+  @@ignore
+}
+
+model account_access {
+  account        Int
+  access         Int
+  id             Int            @id(map: "PK__account___3213E83F94B7CD16") @default(autoincrement())
+  status         Int
+  account_data   account_data   @relation(fields: [account], references: [id], onUpdate: NoAction, map: "FK_account_access_account_data")
+  account_master account_master @relation(fields: [access], references: [id], onUpdate: NoAction, map: "FK_account_access_account_master")
+}
+
+model account_data {
+  username                  String                      @db.NVarChar(50)
+  password                  String?                     @db.NVarChar(50)
+  keterangan                String?                     @db.NVarChar(50)
+  id                        Int                         @id(map: "PK_account_data") @default(autoincrement())
+  email                     String?                     @db.NVarChar(50)
+  telp                      String?                     @db.NVarChar(50)
+  nama                      String?                     @db.NVarChar(50)
+  kategori_akses            Int?
+  photo                     String?                     @db.NVarChar(150)
+  deleted                   Int?
+  account_access            account_access[]
+  account_kategori_access   account_kategori_access?    @relation(fields: [kategori_akses], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_data_account_kategori_access")
+  account_location_access   account_location_access[]
+  account_perusahaan_access account_perusahaan_access[]
+  account_product_access    account_product_access[]
+  chat                      chat[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model account_data2 {
+  username       String? @db.VarChar(50)
+  password       String? @db.VarChar(50)
+  keterangan     String? @db.VarChar(50)
+  id             Int?
+  email          String? @db.VarChar(50)
+  telp           String? @db.VarChar(50)
+  nama           String? @db.VarChar(50)
+  kategori_akses Int?
+  photo          String? @db.NVarChar(150)
+
+  @@ignore
+}
+
+model account_grup_access {
+  id                      Int                      @id(map: "PK_account_grup_access") @default(autoincrement())
+  kategori                Int?
+  access                  Int?
+  account_master          account_master?          @relation(fields: [access], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_grup_access_account_master")
+  account_kategori_access account_kategori_access? @relation(fields: [kategori], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_grup_access_kategori_access")
+}
+
+model account_kategori_access {
+  id                  Int                   @id(map: "PK_Kategori_Akses") @default(autoincrement())
+  nama_kategori       String?               @db.VarChar(Max)
+  account_data        account_data[]
+  account_grup_access account_grup_access[]
+}
+
+model account_location_access {
+  id                Int                @id(map: "PK_account_location_access") @default(autoincrement())
+  account           Int?
+  kode_wilayah      String?            @db.NVarChar(255)
+  kode_perusahaan   String?            @db.VarChar(50)
+  account_data      account_data?      @relation(fields: [account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_location_access_account_data")
+  master_lokasiKab  master_lokasiKab?  @relation(fields: [kode_wilayah], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_account_location_access_kab")
+  master_perusahaan master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_location_access_master_perusahaan")
+}
+
+model account_master {
+  kode                String                @db.NVarChar(50)
+  keterangan          String                @db.Text
+  id                  Int                   @id(map: "PK_account_master") @default(autoincrement())
+  url                 String?               @db.NVarChar(100)
+  legend              Int?
+  account_access      account_access[]
+  account_grup_access account_grup_access[]
+}
+
+model account_perusahaan_access {
+  id_account_perusahaan_access BigInt             @id(map: "PK_account_perusahaan_access") @default(autoincrement())
+  id_account_data              Int?
+  kode_master_perusahaan       String?            @db.VarChar(50)
+  account_data                 account_data?      @relation(fields: [id_account_data], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_perusahaan_access_account_perusahaan_access")
+  master_perusahaan            master_perusahaan? @relation(fields: [kode_master_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_perusahaan_access_account_perusahaan_access1")
+}
+
+model account_product_access {
+  id            BigInt         @id(map: "PK_account_produk_access") @default(autoincrement())
+  akun          Int?
+  produk        Int?
+  account_data  account_data?  @relation(fields: [akun], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_produk_access_account_data")
+  master_produk master_produk? @relation(fields: [produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_account_produk_access_produk_kategori")
+}
+
+model chart_kios {
+  id              String   @id(clustered: false, map: "chart_kios_pk") @unique(map: "chart_kios_id_uindex") @default(dbgenerated("newid()"), map: "DF__chart_kios__id__675F4696") @db.UniqueIdentifier
+  tanggal         DateTime @db.Date
+  totalAktivasi   BigInt
+  totalEntry      BigInt?
+  stokUreaAda     Int
+  stokUreaKosong  Int?
+  ProvinsiId      String?  @db.VarChar(100)
+  RegionId        String?  @db.VarChar(100)
+  KabupatenId     String?  @db.VarChar(100)
+  stokUreaMinimum Int?
+  stokNPKAda      Int?
+  stokNPKKosong   Int?
+  stokNPKMinimum  Int?
+  stokAda         Int?
+  stokKosong      Int?
+  stokMinimum     Int?
+}
+
+model chat {
+  id                  Int           @id(map: "PK_chat") @default(autoincrement())
+  id_user             Int?
+  kueri               String?       @db.VarChar(Max)
+  value               String?       @db.VarChar(Max)
+  isi                 String?       @db.VarChar(Max)
+  tgl_kirim           DateTime?     @db.DateTime
+  status              Int?
+  tgl_update_status0  DateTime?     @db.DateTime
+  username_pengupdate String?       @db.VarChar(Max)
+  perusahaan          Int?
+  account_data        account_data? @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_chat_account_data")
+}
+
+model device_gps {
+  id                   String                 @id(map: "gps$PrimaryKey") @db.NVarChar(255)
+  keterangan           String?                @db.NVarChar(Max)
+  kode                 String?                @db.NVarChar(Max)
+  status               Int?
+  kode_perusahaan      String?                @db.VarChar(50)
+  nama_kapal           String?                @db.NVarChar(Max)
+  pelabuhan_asal       String?                @db.NVarChar(Max)
+  pelabuhan_tujuan     String?                @db.NVarChar(Max)
+  muatan               String?                @db.NVarChar(Max)
+  noposto              Float?
+  status_kapal         String?                @db.NVarChar(Max)
+  id_kapal             BigInt?
+  master_perusahaan    master_perusahaan?     @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_device_gps_master_perusahaan")
+  device_gpsHits       device_gpsHits[]
+  device_gpsLogKapal   device_gpsLogKapal[]
+  device_gpsPengiriman device_gpsPengiriman[]
+}
+
+model device_gpsHits {
+  ObjectID     String?     @db.NVarChar(255)
+  GPSTime      DateTime?   @db.DateTime
+  ObjectRegNum String?     @db.NVarChar(255)
+  Lon          Float?
+  StatusDec    String?     @db.NVarChar(255)
+  Lat          Float?
+  Cur_Location Float?
+  Speed        Float?
+  ID           Int         @id(map: "GPS_hist$ID") @default(autoincrement())
+  LastDataTime DateTime?   @db.DateTime
+  status       String?     @db.Text
+  device_gps   device_gps? @relation(fields: [ObjectID], references: [id], map: "GPS_hist$gpsGPS_hist")
+
+  @@index([LastDataTime(sort: Desc)], map: "_dta_index_device_gpsHits_6_773577794__K10D")
+}
+
+model device_gpsLogKapal {
+  id           BigInt     @id(map: "PK_device_gpsLogKapal") @default(autoincrement())
+  status_kapal String     @db.NVarChar(200)
+  id_gps       String     @db.NVarChar(255)
+  created_at   DateTime   @default(now(), map: "DF_device_gpsLogKapal_created_at") @db.DateTime
+  device_gps   device_gps @relation(fields: [id_gps], references: [id], onDelete: Cascade, map: "FK_gps_device_gps_deviceLogKapal")
+}
+
+model device_gpsPengiriman {
+  id         BigInt     @id(map: "PK_device_gpsPengiriman") @default(autoincrement())
+  id_gps     String     @db.NVarChar(255)
+  noposto    String     @db.NVarChar(10)
+  created_at DateTime   @default(now(), map: "DF_device_gpsPengiriman_created_at")
+  updated_at DateTime?
+  status     String?    @db.NVarChar(10)
+  device_gps device_gps @relation(fields: [id_gps], references: [id], onDelete: Cascade, map: "FK_device_gpsPengiriman_device_gps1")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model distributor_mapping {
+  customer_id     String? @db.NVarChar(255)
+  sales_office_id String? @db.NVarChar(255)
+  sales_group_id  String? @db.NVarChar(255)
+
+  @@ignore
+}
+
+model dpcs_command {
+  id      BigInt  @id(map: "PK_nvarchar(200)") @default(autoincrement())
+  command String? @db.NVarChar(500)
+  args    String?
+  status  Int?
+  name    String? @db.NVarChar(2000)
+}
+
+model dpcs_error {
+  id          BigInt    @id(map: "PK_dpcs_error") @default(autoincrement())
+  application String?   @db.VarChar(100)
+  message     String?   @db.Text
+  time        DateTime? @db.DateTime
+}
+
+model driver_indigo_data {
+  id         String    @id(clustered: false, map: "driver_indigo_data_pk") @default(dbgenerated("newid()"), map: "DF__driver_indig__id__4A38F803") @db.UniqueIdentifier
+  name       String?   @db.VarChar(255)
+  phone      String?   @db.VarChar(255)
+  id_device  String?   @db.VarChar(255)
+  created_at DateTime? @default(now(), map: "DF__driver_in__creat__4B2D1C3C") @db.DateTime
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model drp_datapenjualan {
+  tanggal          DateTime? @db.DateTime
+  prop_kode        Float?
+  kab_kode         String?   @db.NVarChar(255)
+  skmentan_hari    Float?
+  skmentan_bulan   Float?
+  skmentan_tahun   Float?
+  stok_hari        Float?
+  stok_grup        Float?
+  stok_minstok     Float?
+  skgub_bulan      Float?
+  skgub_tahun      Float?
+  penyaluran_bulan Float?
+  penyaluran_tahun Float?
+
+  @@ignore
+}
+
+model drp_grossreq_d {
+  id               BigInt            @id(map: "PK_drp_grossreq_d") @default(autoincrement())
+  id_name          BigInt?
+  ton              Float?
+  kodekab          String?           @db.VarChar(50)
+  tanggal          DateTime?         @db.Date
+  produk           String?           @db.VarChar(50)
+  drp_grossreqname drp_grossreqname? @relation(fields: [id_name], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_drp_grossreq_d_drp_grossreqname")
+  drp_kabHost      drp_kabHost?      @relation(fields: [kodekab], references: [kodekab], onDelete: NoAction, onUpdate: NoAction, map: "FK_drp_grossreq_d_drp_kabHost")
+}
+
+model drp_grossreqname {
+  id                 BigInt           @id(map: "PK_drp_grossreqname") @default(autoincrement())
+  name               String?          @db.NVarChar(500)
+  file_name          String?          @db.VarChar(Max)
+  generate_at        DateTime?        @db.DateTime
+  generate_finish_at DateTime?        @db.DateTime
+  status_generate    String?          @db.VarChar(100)
+  id_prognosa_header String?          @db.VarChar(255)
+  drp_grossreq_d     drp_grossreq_d[]
+  xGrup              xGrup[]
+}
+
+model drp_kabHost {
+  kodekab        String           @id(map: "PK_drp_kabHost") @db.VarChar(50)
+  drp_grossreq_d drp_grossreq_d[]
+  drp_skgub      drp_skgub[]
+  xKab           xKab[]
+}
+
+model drp_plantHost {
+  kode               String               @id(map: "PK_drp_grupHost") @db.NVarChar(50)
+  kapasitas          Int?
+  drp_rencanProduksi drp_rencanProduksi[]
+  drp_shutdown       drp_shutdown[]
+  drp_transportasi   drp_transportasi[]
+  xPlant             xPlant[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model drp_plantKapasitas {
+  id_plant  String? @db.NVarChar(255)
+  produk    String? @db.NVarChar(255)
+  kapasitas Float?
+
+  @@ignore
+}
+
+model drp_rencanProduksi {
+  tanggal       DateTime?      @db.Date
+  produk        String?        @db.NVarChar(50)
+  plant         String?        @db.NVarChar(50)
+  mix           Int?
+  sub           Int?
+  nonsub        Int?
+  id            Int            @id(map: "PK_drp_rencanProduksi") @default(autoincrement())
+  drp_plantHost drp_plantHost? @relation(fields: [plant], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_drp_rencanProduksi_drp_plantHost")
+}
+
+model drp_shutdown {
+  id            BigInt         @id(map: "PK_drp_shutdown") @default(autoincrement())
+  tanggal       DateTime?      @db.Date
+  persentase    Float?
+  grup          String?        @db.VarChar(50)
+  plant         String?        @db.NVarChar(50)
+  drp_plantHost drp_plantHost? @relation(fields: [plant], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_drp_shutdown_drp_shutdown")
+}
+
+model drp_skenario {
+  id       BigInt    @id(map: "PK_Skenario")
+  username String?   @db.VarChar(50)
+  tanggal  DateTime? @db.DateTime
+  status   Int?
+  xD       xD[]
+}
+
+model drp_skgub {
+  id          BigInt       @id(map: "PK_drp_skgub") @default(autoincrement())
+  tanggal     DateTime?    @db.Date
+  kodekab     String?      @db.VarChar(50)
+  ton         Float?
+  produk      String?      @db.VarChar(50)
+  minstok     Float?
+  produksi    Int?
+  drp_kabHost drp_kabHost? @relation(fields: [kodekab], references: [kodekab], onDelete: NoAction, onUpdate: NoAction, map: "FK_drp_skgub_drp_skgub")
+}
+
+model drp_transportasi {
+  id            BigInt         @id(map: "PK_drp_transportasi") @default(autoincrement())
+  alut          String?        @db.VarChar(50)
+  lotsize       Float?
+  maxload       Float?
+  leadtime      Int?
+  bentuk        String?        @db.VarChar(50)
+  bulan         Int?
+  parent        String?        @db.VarChar(50)
+  tujuan        String?        @db.NVarChar(50)
+  drp_plantHost drp_plantHost? @relation(fields: [tujuan], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_drp_transportasi_drp_transportasi")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model f5_urea {
+  sales_group_id String? @db.NVarChar(255)
+  product_id     String? @db.NVarChar(255)
+  month          String? @db.NVarChar(255)
+  stok_awal      Float?
+  penebusan      Float?
+  penyaluran     Float?
+  stok_akhir     Float?
+  year           String? @default("2022", map: "DF__f5_urea__year__61074EC2") @db.VarChar(10)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Format_SK_DPCS__ {
+  kodekab   Float?
+  bulan     Float?
+  ton       Float?
+  tahun     Float?
+  id_produk Float?
+
+  @@map("'Format SK DPCS$'")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model gps {
+  id               Float?
+  do_number        Float?
+  do_date          DateTime? @db.DateTime
+  gi_date          DateTime? @db.DateTime
+  source_plant     String?   @db.NVarChar(255)
+  dest_plant       String?   @db.NVarChar(255)
+  transporter      String?   @db.NVarChar(255)
+  transporter_mode String?   @db.NVarChar(255)
+  plate_number     String?   @db.NVarChar(255)
+  driver_name      String?   @db.NVarChar(255)
+  latitude         String?   @db.NVarChar(255)
+  longitude        Float?
+  start_time       String?   @db.NVarChar(255)
+  end_time         String?   @db.NVarChar(255)
+  status           Float?
+  last_update      String?   @db.NVarChar(255)
+
+  @@ignore
+}
+
+model grupdistribusi {
+  ID                   BigInt             @id(map: "grupdistribusi$ID") @default(autoincrement())
+  grup                 String?            @db.NVarChar(255)
+  plant                String?            @db.NVarChar(255)
+  kab                  String?            @db.NVarChar(255)
+  prop                 String?            @db.NVarChar(255)
+  alut                 String?            @db.NVarChar(255)
+  load_size            Int?
+  leadtime             Int?
+  safety_stok          Int?
+  parrent              String?            @db.NVarChar(255)
+  nama_group           String?            @db.NVarChar(255)
+  gross_req            String?            @db.NVarChar(50)
+  kode_perusahaan      String?            @db.VarChar(50)
+  id_produk            String?            @db.VarChar(50)
+  leader               Int?
+  bentuk               String?            @db.VarChar(50)
+  maxload_truk         Int?
+  maxload_kapalcurah   Int?
+  maxload_kapalkantong Int?
+  master_perusahaan    master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_grupdistribusi_master_perusahaan")
+  master_lokasiKab     master_lokasiKab?  @relation(fields: [kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "grupdistribusi$kabgrupdistribusi")
+  master_plant         master_plant?      @relation(fields: [plant], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "grupdistribusi$plantgrupdistribusi")
+
+  @@index([grup], map: "_dta_index_grupdistribusi_6_1083150904__K2_4")
+}
+
+model grupdistribusi_backup {
+  ID                   BigInt             @id(map: "grupdistribusi_backup$ID") @default(autoincrement())
+  grup                 String?            @db.NVarChar(255)
+  plant                String?            @db.NVarChar(255)
+  kab                  String?            @db.NVarChar(255)
+  prop                 String?            @db.NVarChar(255)
+  alut                 String?            @db.NVarChar(255)
+  load_size            Int?
+  leadtime             Int?
+  safety_stok          Int?
+  parrent              String?            @db.NVarChar(255)
+  nama_group           String?            @db.NVarChar(255)
+  gross_req            String?            @db.NVarChar(50)
+  kode_perusahaan      String?            @db.VarChar(50)
+  id_produk            String?            @db.VarChar(50)
+  leader               Int?
+  bentuk               String?            @db.VarChar(50)
+  maxload_truk         Int?
+  maxload_kapalcurah   Int?
+  maxload_kapalkantong Int?
+  master_perusahaan    master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_grupdistribusi_backup_master_perusahaan")
+  master_lokasiKab     master_lokasiKab?  @relation(fields: [kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "grupdistribusi_backup$kabgrupdistribusi_backup")
+  master_plant         master_plant?      @relation(fields: [plant], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "grupdistribusi_backup$plantgrupdistribusi_backup")
+}
+
+model histori_perijinan {
+  ID            Int           @id(map: "histori_perijinan$ID") @default(autoincrement())
+  plant         String?       @db.NVarChar(255)
+  akhir_kontrak DateTime?     @db.DateTime
+  status        String?       @db.NVarChar(255)
+  awal_kontrak  DateTime?     @db.DateTime
+  master_plant  master_plant? @relation(fields: [plant], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "histori_perijinan$planthistori_perijinan")
+}
+
+model icon_distributor {
+  id                       String                     @id(map: "PK_icon_distributor") @db.UniqueIdentifier
+  TanggalEntry             DateTime?                  @db.DateTime
+  kode                     String?                    @db.VarChar(Max)
+  nama                     String?                    @db.VarChar(Max)
+  lat                      Float?
+  lng                      Float?
+  status                   String?                    @db.VarChar(Max)
+  created_at               DateTime?                  @db.DateTime
+  KabupatenId              String?                    @db.NVarChar(50)
+  ProvinsiId               String?                    @db.NVarChar(50)
+  Kabupaten                String?                    @db.VarChar(Max)
+  Provinsi                 String?                    @db.VarChar(Max)
+  TotalStok                Float?
+  Satuan                   String?                    @db.VarChar(50)
+  tipeKios                 String?                    @db.VarChar(50)
+  Foto1                    String?                    @db.VarChar(Max)
+  Foto2                    String?                    @db.VarChar(Max)
+  BelumAktivasi            Boolean?
+  stokUrea                 Float?
+  stokNpk                  Float?
+  StokNpkFk                Float?
+  icon_distributor_product icon_distributor_product[]
+
+  @@index([created_at], map: "INDEX_ICON_DISTRIBUTPOR_CREATED_AT_PROVINSI_ID")
+  @@index([TanggalEntry, created_at, ProvinsiId], map: "NonClusteredIndex-20221015-084255")
+}
+
+model icon_distributor_product {
+  id                String           @id(map: "PK_icon_distributor_product") @default(dbgenerated("newid()"), map: "DF_icon_distributor_product_id") @db.UniqueIdentifier
+  PantauStokId      BigInt
+  KodeProduk        String?          @db.VarChar(50)
+  NamaProduk        String?          @db.VarChar(100)
+  Quantity          BigInt?
+  Satuan            String?          @db.VarChar(50)
+  IdIconDistributor String           @db.UniqueIdentifier
+  IdProduk          String?          @db.VarChar(50)
+  created_at        DateTime?        @default(now(), map: "DF__icon_dist__creat__5748DA5E") @db.DateTime
+  icon_distributor  icon_distributor @relation(fields: [IdIconDistributor], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_icon_distributor_icon_kios_product")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_distributor_product_today {
+  id                String    @db.UniqueIdentifier
+  PantauStokId      BigInt
+  KodeProduk        String?   @db.VarChar(50)
+  NamaProduk        String?   @db.VarChar(100)
+  Quantity          BigInt?
+  Satuan            String?   @db.VarChar(50)
+  IdIconDistributor String    @db.UniqueIdentifier
+  IdProduk          String?   @db.VarChar(50)
+  created_at        DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_distributor_today {
+  id            String    @db.UniqueIdentifier
+  TanggalEntry  DateTime? @db.DateTime
+  kode          String?   @db.VarChar(Max)
+  nama          String?   @db.VarChar(Max)
+  lat           Float?
+  lng           Float?
+  status        String?   @db.VarChar(Max)
+  created_at    DateTime? @db.DateTime
+  KabupatenId   String?   @db.NVarChar(50)
+  ProvinsiId    String?   @db.NVarChar(50)
+  Kabupaten     String?   @db.VarChar(Max)
+  Provinsi      String?   @db.VarChar(Max)
+  TotalStok     Float?
+  Satuan        String?   @db.VarChar(50)
+  tipeKios      String?   @db.VarChar(50)
+  Foto1         String?   @db.VarChar(Max)
+  Foto2         String?   @db.VarChar(Max)
+  BelumAktivasi Boolean?
+  stokUrea      Float?
+  stokNpk       Float?
+  StokNpkFk     Float?
+
+  @@ignore
+}
+
+model icon_kios {
+  id                String              @id(map: "PK_icon_kios") @db.UniqueIdentifier
+  TanggalEntry      DateTime?           @db.DateTime
+  kode              String?             @db.VarChar(Max)
+  nama              String?             @db.VarChar(Max)
+  lat               Float?
+  lng               Float?
+  status            String?             @db.VarChar(Max)
+  created_at        DateTime?           @db.DateTime
+  KabupatenId       String?             @db.NVarChar(50)
+  ProvinsiId        String?             @db.NVarChar(50)
+  Kabupaten         String?             @db.VarChar(Max)
+  Provinsi          String?             @db.VarChar(Max)
+  TotalStok         Float?
+  Satuan            String?             @db.VarChar(50)
+  tipeKios          String?             @db.VarChar(50)
+  Foto1             String?             @db.VarChar(Max)
+  Foto2             String?             @db.VarChar(Max)
+  BelumAktivasi     Boolean?
+  stokUrea          Float?
+  stokNpk           Float?
+  stokNpkFk         Float?
+  Kecamatan         String?             @db.VarChar(255)
+  KecamatanId       String?             @db.VarChar(255)
+  icon_kios_product icon_kios_product[]
+
+  @@index([TanggalEntry], map: "TanggalEntry")
+}
+
+model icon_kios_dev {
+  id           String    @id(map: "PK_icon_kios_dev") @db.UniqueIdentifier
+  TanggalEntry DateTime? @db.DateTime
+  kode         String?   @db.VarChar(Max)
+  nama         String?   @db.VarChar(Max)
+  lat          Float?
+  lng          Float?
+  status       String?   @db.VarChar(Max)
+  created_at   DateTime? @db.DateTime
+  KabupatenId  String?   @db.NVarChar(50)
+  ProvinsiId   String?   @db.NVarChar(50)
+  Kabupaten    String?   @db.VarChar(Max)
+  Provinsi     String?   @db.VarChar(Max)
+  TotalStok    Float?
+  Satuan       String?   @db.VarChar(50)
+  tipeKios     String?   @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_kios_komersil {
+  id             String?   @default(dbgenerated("newid()"), map: "DF__icon_kios_ko__id__69678A99") @db.UniqueIdentifier
+  kode           String?   @db.VarChar(Max)
+  nama           String?   @db.VarChar(Max)
+  lat            Float?
+  lng            Float?
+  alamat         String?   @db.VarChar(Max)
+  kabupatenId    String?   @db.NVarChar(50)
+  kabupaten      String?   @db.VarChar(Max)
+  provinsiId     String?   @db.NVarChar(50)
+  provinsi       String?   @db.VarChar(Max)
+  foto1          String?   @db.VarChar(Max)
+  foto2          String?   @db.VarChar(Max)
+  luasKios       Float?
+  komoditasUtama String?   @db.VarChar(Max)
+  kiosCreatedAt  DateTime? @db.DateTime
+  createdAt      DateTime? @default(now(), map: "DF__icon_kios__creat__6A5BAED2") @db.DateTime
+  tipeKios       String?   @db.VarChar(25)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_kios_komersil_today {
+  id             String?   @db.UniqueIdentifier
+  kode           String?   @db.VarChar(Max)
+  nama           String?   @db.VarChar(Max)
+  lat            Float?
+  lng            Float?
+  alamat         String?   @db.VarChar(Max)
+  kabupatenId    String?   @db.NVarChar(50)
+  kabupaten      String?   @db.VarChar(Max)
+  provinsiId     String?   @db.NVarChar(50)
+  provinsi       String?   @db.VarChar(Max)
+  foto1          String?   @db.VarChar(Max)
+  foto2          String?   @db.VarChar(Max)
+  luasKios       Float?
+  komoditasUtama String?   @db.VarChar(Max)
+  kiosCreatedAt  DateTime? @db.DateTime
+  createdAt      DateTime? @db.DateTime
+  tipeKios       String?   @db.VarChar(25)
+
+  @@ignore
+}
+
+model icon_kios_product {
+  id           String    @id(map: "PK_icon_kios_product") @default(dbgenerated("newid()"), map: "DF_icon_kios_product_id") @db.UniqueIdentifier
+  PantauStokId BigInt
+  KodeProduk   String?   @db.VarChar(50)
+  NamaProduk   String?   @db.VarChar(100)
+  Quantity     BigInt?
+  Satuan       String?   @db.VarChar(50)
+  IdIconKios   String    @db.UniqueIdentifier
+  IdProduk     String?   @db.VarChar(50)
+  created_at   DateTime? @default(now(), map: "DF__icon_kios__creat__5654B625") @db.DateTime
+  icon_kios    icon_kios @relation(fields: [IdIconKios], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_icon_Kios_icon_kios_product")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_kios_product_today {
+  id           String    @db.UniqueIdentifier
+  PantauStokId BigInt
+  KodeProduk   String?   @db.VarChar(50)
+  NamaProduk   String?   @db.VarChar(100)
+  Quantity     BigInt?
+  Satuan       String?   @db.VarChar(50)
+  IdIconKios   String    @db.UniqueIdentifier
+  IdProduk     String?   @db.VarChar(50)
+  created_at   DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model icon_kios_today {
+  id            String    @db.UniqueIdentifier
+  TanggalEntry  DateTime? @db.DateTime
+  kode          String?   @db.VarChar(Max)
+  nama          String?   @db.VarChar(Max)
+  lat           Float?
+  lng           Float?
+  status        String?   @db.VarChar(Max)
+  created_at    DateTime? @db.DateTime
+  KabupatenId   String?   @db.NVarChar(50)
+  ProvinsiId    String?   @db.NVarChar(50)
+  Kabupaten     String?   @db.VarChar(Max)
+  Provinsi      String?   @db.VarChar(Max)
+  TotalStok     Float?
+  Satuan        String?   @db.VarChar(50)
+  tipeKios      String?   @db.VarChar(50)
+  Foto1         String?   @db.VarChar(Max)
+  Foto2         String?   @db.VarChar(Max)
+  BelumAktivasi Boolean?
+  stokUrea      Float?
+  stokNpk       Float?
+  stokNpkFk     Float?
+  Kecamatan     String?   @db.VarChar(255)
+  KecamatanId   String?   @db.VarChar(255)
+
+  @@ignore
+}
+
+model kapal_pelabuhan {
+  Dermaga           String?            @db.NVarChar(255)
+  Nama_Kapal        String?            @map("Nama Kapal") @db.NVarChar(255)
+  Pemilik_Barang    String?            @map("Pemilik Barang") @db.NVarChar(255)
+  Tujuan            String?            @db.NVarChar(255)
+  Muatan            String?            @db.NVarChar(255)
+  Rencana           Float?
+  COB               Float?
+  Status            String?            @db.NVarChar(255)
+  Keterangan        String?            @db.NVarChar(255)
+  ASAL              String?            @db.NVarChar(255)
+  LONGITUDE         String?            @db.NVarChar(255)
+  LATITUDE          String?            @db.NVarChar(255)
+  SHIP_TYPE         String?            @map("SHIP TYPE") @db.NVarChar(255)
+  FLAG              String?            @db.NVarChar(255)
+  BUILT             String?            @db.NVarChar(255)
+  SIZE              String?            @db.NVarChar(255)
+  CUR_DGHT          String?            @map("CUR DGHT") @db.NVarChar(255)
+  SPEED             String?            @db.NVarChar(255)
+  IMO               String?            @db.NVarChar(255)
+  MMSI              String?            @db.NVarChar(255)
+  GROSS_TON         String?            @map("GROSS TON") @db.NVarChar(255)
+  DWT               String?            @db.NVarChar(255)
+  KAPASITAS         String?            @db.NVarChar(255)
+  ID                Int                @id(map: "PK_kapal_pelabuhan") @default(autoincrement())
+  F25               String?            @db.NVarChar(255)
+  kode_perusahaan   String?            @db.VarChar(50)
+  master_perusahaan master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_kapal_pelabuhan_master_perusahaan")
+}
+
+model log_pantau_kandungan {
+  id         String   @id(clustered: false, map: "log_pantau_kandungan_pk") @default(dbgenerated("newid()"), map: "DF__log_pantau_k__id__4FBCC72F") @db.UniqueIdentifier
+  fertility  Float
+  nitrogen   Float
+  phosphat   Float
+  kalium     Float
+  created_at DateTime @default(now(), map: "DF__log_panta__creat__50B0EB68") @db.DateTime
+  device_id  String?  @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model MapDistributorKios {
+  Id                Float?
+  DistributorKode   String? @db.NVarChar(255)
+  DistributorNama   String? @db.NVarChar(255)
+  RetailerKode      String? @db.NVarChar(255)
+  RetailerNama      String? @db.NVarChar(255)
+  KecamatanId       String? @db.NVarChar(255)
+  Kecamatan         String? @db.NVarChar(255)
+  KabupatenId       String? @db.NVarChar(255)
+  Kabupaten         String? @db.NVarChar(255)
+  ProvinsiId        String? @db.NVarChar(255)
+  Provinsi          String? @db.NVarChar(255)
+  RetailerStatusPso Float?
+
+  @@ignore
+}
+
+model master_distributor {
+  No                 Float?
+  ID                 String            @id(map: "PK_distributor") @db.NVarChar(255)
+  Nama               String?           @db.NVarChar(255)
+  Direktur           String?           @db.NVarChar(255)
+  Alamat             String?           @db.NVarChar(255)
+  NamaKabupaten      String?           @db.NVarChar(255)
+  Kab                String?           @db.NVarChar(255)
+  NamaKecamatan      String?           @db.NVarChar(255)
+  Lat                Float?
+  Lng                Float?
+  F11                Float?
+  NoTelepon          String?           @db.NVarChar(255)
+  NoFaks             String?           @db.NVarChar(255)
+  Email              String?           @db.NVarChar(255)
+  NomorHandphone     String?           @db.NVarChar(255)
+  AlamatFaktur       String?           @db.NVarChar(255)
+  TeleponFaktur      String?           @db.NVarChar(255)
+  FaksimilFaktur     String?           @db.NVarChar(255)
+  NPWP               String?           @db.NVarChar(255)
+  ContactPerson      String?           @db.NVarChar(255)
+  HpContactPerson    String?           @db.NVarChar(50)
+  nppkp              Float?
+  SIUP               String?           @db.NVarChar(255)
+  SITU               String?           @db.NVarChar(255)
+  TDP                String?           @db.NVarChar(255)
+  Armada             Float?
+  LokasiArmada       String?           @db.NVarChar(255)
+  NamaKP             String?           @db.NVarChar(255)
+  NamaPropinsi       String?           @db.NVarChar(255)
+  IsBUMN             Float?
+  KabupatenFaktur    String?           @db.NVarChar(255)
+  NamaPropinsiFaktur String?           @db.NVarChar(255)
+  distributor_id     String?           @db.VarChar(50)
+  master_lokasiKab   master_lokasiKab? @relation(fields: [Kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_distributor_distributor")
+}
+
+model master_kapal {
+  id         BigInt    @id(map: "PK_master_kapal") @default(autoincrement())
+  nama       String?   @db.NVarChar(Max)
+  photo      String?   @db.NVarChar(Max)
+  created_at DateTime?
+  updated_at DateTime?
+}
+
+model master_lokasiKab {
+  id                       String                     @id(map: "kab$id") @db.NVarChar(255)
+  prop                     String?                    @db.NVarChar(255)
+  nama                     String?                    @db.NVarChar(Max)
+  lat                      Float?
+  lng                      Float?
+  account_location_access  account_location_access[]
+  grupdistribusi           grupdistribusi[]
+  grupdistribusi_backup    grupdistribusi_backup[]
+  master_distributor       master_distributor[]
+  master_lokasiProp        master_lokasiProp?         @relation(fields: [prop], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_master_lokasiKab_master_lokasiProp")
+  master_lokasiKecamatan   master_lokasiKecamatan[]
+  master_pengecer          master_pengecer[]
+  master_plant             master_plant[]
+  prognosa_value           prognosa_value[]
+  siaga_distributor_lokasi siaga_distributor_lokasi[]
+  siaga_stok_distributor   siaga_stok_distributor[]
+  sk_gub                   sk_gub[]
+}
+
+model master_lokasiKecamatan {
+  id                                String                              @id(map: "PK_master_lokasiKecamatan") @db.NVarChar(255)
+  kab                               String?                             @db.NVarChar(255)
+  nama                              String?                             @db.NVarChar(255)
+  lat                               Float?
+  lng                               Float?
+  master_lokasiKab                  master_lokasiKab?                   @relation(fields: [kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_master_lokasiKecamatan_master_lokasiKab")
+  siaga_master_pengecer             siaga_master_pengecer[]
+  siaga_relasi_distributor_pengecer siaga_relasi_distributor_pengecer[]
+  siaga_spjb                        siaga_spjb[]
+}
+
+model master_lokasiProp {
+  kode             String             @id(map: "prop$kode") @db.NVarChar(255)
+  prop             String?            @db.NVarChar(Max)
+  lat              Float?
+  lng              Float?
+  region           String?            @db.VarChar(50)
+  nama_region      String?            @db.VarChar(255)
+  master_lokasiKab master_lokasiKab[]
+  sk_mentan        sk_mentan[]
+}
+
+model master_lokasiRegion {
+  id   Int     @id(map: "master_lokasiRegion_pk") @default(autoincrement())
+  kode String? @db.VarChar(50)
+  nama String? @db.VarChar(255)
+  lat  Float?
+  lng  Float?
+}
+
+model master_lokasiSalesGrup {
+  KodeKab   String? @db.NVarChar(255)
+  SalesGrup String? @db.NVarChar(255)
+  id        BigInt  @id(map: "PK_master_lokasiSalesGrup") @default(autoincrement())
+}
+
+model master_material {
+  id              String         @id(map: "produk$id") @db.NVarChar(255)
+  nama            String?        @db.NVarChar(255)
+  PG              String?        @db.NVarChar(255)
+  subs            String?        @db.NVarChar(255)
+  bentuk          String?        @db.NVarChar(255)
+  kategori_produk Int?
+  master_produk   master_produk? @relation(fields: [kategori_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_produk_produk_kategori")
+}
+
+model master_pengecer {
+  kode             String            @id(map: "PK_pengecer") @db.NVarChar(255)
+  nama             String?           @db.NVarChar(255)
+  pemilik          String?           @db.NVarChar(255)
+  alamat           String?           @db.NVarChar(255)
+  kab              String?           @db.NVarChar(255)
+  kecamatan        String?           @db.NVarChar(255)
+  desa             String?           @db.NVarChar(255)
+  lat              Float?
+  lng              Float?
+  pengecer_id      String?           @db.VarChar(50)
+  hp               String?           @db.NVarChar(50)
+  master_lokasiKab master_lokasiKab? @relation(fields: [kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_pengecer_pengecer")
+
+  @@index([pengecer_id, lat, lng, hp, alamat], map: "_dta_index_master_pengecer_6_1093578934__K10_K8_K9_K11_K4_6_7")
+}
+
+model master_perusahaan {
+  kode_perusahaan                   String                              @id(map: "PK_master_perusahaan") @db.VarChar(50)
+  nama_perusahaan                   String?                             @db.VarChar(100)
+  account_location_access           account_location_access[]
+  account_perusahaan_access         account_perusahaan_access[]
+  device_gps                        device_gps[]
+  grupdistribusi                    grupdistribusi[]
+  grupdistribusi_backup             grupdistribusi_backup[]
+  kapal_pelabuhan                   kapal_pelabuhan[]
+  master_plant                      master_plant[]
+  siaga_relasi_distributor_pengecer siaga_relasi_distributor_pengecer[]
+  siaga_spjb                        siaga_spjb[]
+  sk_mentan                         sk_mentan[]
+  sk_rkap                           sk_rkap[]
+}
+
+model master_plant {
+  id                    String                  @id(map: "plant$plant") @db.NVarChar(255)
+  nama                  String?                 @db.NVarChar(255)
+  alamat                String?                 @db.NVarChar(255)
+  kab                   String?                 @db.NVarChar(255)
+  lat                   Float?
+  lng                   Float?
+  pemilik               String?                 @db.NVarChar(255)
+  kapas_admin           Int?
+  kapas_kontrak         Int?
+  telp                  String?                 @db.VarChar(50)
+  kode_perusahaan       String?                 @db.VarChar(50)
+  lini                  Int?
+  ispelabuhan           String?                 @db.NChar(10)
+  supply_point          String?                 @db.VarChar(255)
+  max_load              BigInt?
+  max_unload            BigInt?
+  pemilik_gudang        String?                 @db.VarChar(255)
+  pengelola_gudang      String?                 @db.VarChar(255)
+  kepala_gudang         String?                 @db.VarChar(255)
+  phone_kepala_gudang   String?                 @db.NVarChar(255)
+  start_masa_sewa       DateTime?               @db.Date
+  end_masa_sewa         DateTime?               @db.Date
+  start_masa_kelola     DateTime?               @db.Date
+  end_masa_kelola       DateTime?               @db.Date
+  man_fee               Float?                  @db.Money
+  tarif_handling_in     Float?                  @db.Money
+  tarif_handling_out    Float?                  @db.Money
+  tarif_restaple        Float?                  @db.Money
+  tarif_rebagging       Float?                  @db.Money
+  photo                 String?                 @db.Text
+  status                Boolean?                @default(true, map: "DF_master_plant_status")
+  is_gudang_bersama     Boolean?
+  grupdistribusi        grupdistribusi[]
+  grupdistribusi_backup grupdistribusi_backup[]
+  histori_perijinan     histori_perijinan[]
+  master_perusahaan     master_perusahaan?      @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_master_plant_master_perusahaan")
+  master_lokasiKab      master_lokasiKab?       @relation(fields: [kab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "plant$kabplant")
+
+  @@index([id], map: "_dta_index_master_plant_6_1157579162__K1")
+}
+
+model master_produk {
+  id                     Int                      @id(map: "PK_produk_kategori") @default(autoincrement())
+  kategori_produk        String?                  @db.VarChar(Max)
+  nomor                  String?                  @db.VarChar(50)
+  produk_pokok           BigInt?
+  account_product_access account_product_access[]
+  master_material        master_material[]
+  master_produkKategori  master_produkKategori?   @relation(fields: [produk_pokok], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_produk_kategori_produk_pokok")
+  produk_compotition     produk_compotition[]
+  produk_dokumen         produk_dokumen[]
+  prognosa_value         prognosa_value[]
+  sk_gub                 sk_gub[]
+  sk_mentan              sk_mentan[]
+  sk_rkap                sk_rkap[]
+  stokKab_optimum        stokKab_optimum[]
+}
+
+model master_produkKategori {
+  id            BigInt          @id(map: "PK__produk_p__3213E83FCAC5C9FF") @default(autoincrement())
+  nama          String?         @db.VarChar(50)
+  nomor         String?         @db.VarChar(50)
+  master_produk master_produk[]
+}
+
+model master_ruteKapal {
+  No               Int     @id(map: "PK_master_ruteKapal") @default(autoincrement())
+  Pelabuhan_Asal   String? @map("Pelabuhan Asal") @db.NVarChar(Max)
+  Pelabuhan_Tujuan String? @map("Pelabuhan Tujuan") @db.NVarChar(Max)
+  Rute             String? @db.Text
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model master_sla {
+  id               String? @db.UniqueIdentifier
+  kodeGudangAsal   String? @db.VarChar(1)
+  namaGudangAsal   String? @db.VarChar(1)
+  kodeGudangTujuan String? @db.VarChar(1)
+  namaGudangTujuan String? @db.VarChar(1)
+  alut             String? @db.VarChar(1)
+  sla              Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model master_user_wilayah {
+  npk             String? @db.NVarChar(255)
+  nama            String? @db.NVarChar(255)
+  telp            String? @db.NVarChar(255)
+  jabatan         String? @db.NVarChar(100)
+  file_photo      String? @db.NVarChar(50)
+  kode_perusahaan String? @db.NVarChar(50)
+  kabupaten       String? @db.NVarChar(50)
+  kecamatan       String? @db.NVarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model P009 {
+  tanggal         String  @db.VarChar(23)
+  prop_kode       Int
+  prop_nama       String  @db.VarChar(20)
+  kab_kode        Int
+  company         String  @db.VarChar(34)
+  company_code    String  @db.VarChar(4)
+  kab_nama        String  @db.VarChar(28)
+  alokasi         Decimal @db.Decimal(10, 2)
+  realisasi       Decimal @db.Decimal(10, 2)
+  persentase      Decimal @db.Decimal(10, 2)
+  intransit       Decimal @db.Decimal(10, 2)
+  lini1           Decimal @db.Decimal(10, 2)
+  lini2           Decimal @db.Decimal(10, 2)
+  lini3           Decimal @db.Decimal(10, 2)
+  lini2_3         Decimal @db.Decimal(10, 2)
+  pengecer        Decimal @db.Decimal(10, 2)
+  distributor     Decimal @db.Decimal(10, 2)
+  stok_minstok    Decimal @db.Decimal(10, 2)
+  stok_percentage Decimal @db.Decimal(10, 2)
+  produk          String  @db.VarChar(3)
+  total_lini      Decimal @db.Decimal(10, 2)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model P085 {
+  tanggal         DateTime @db.Date
+  kode            Int
+  prop            String   @db.VarChar(20)
+  alokasi         Decimal  @db.Decimal(9, 2)
+  realisasi       Decimal  @db.Decimal(8, 2)
+  intransit       Decimal  @db.Decimal(8, 2)
+  lini1           Decimal  @db.Decimal(8, 2)
+  lini2           Decimal  @db.Decimal(8, 2)
+  lini3           Decimal  @db.Decimal(8, 2)
+  lini2_3         Decimal  @db.Decimal(8, 2)
+  lini2_4         Decimal  @db.Decimal(10, 2)
+  pengecer        Decimal  @db.Decimal(9, 2)
+  distributor     Decimal  @db.Decimal(9, 2)
+  stok_minstok    Decimal  @db.Decimal(8, 2)
+  stok_percentage Decimal  @db.Decimal(8, 2)
+  produk          String   @db.VarChar(3)
+  total_lini      Decimal  @db.Decimal(10, 2)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model plant {
+  id     String? @db.NVarChar(255)
+  nama   String? @db.NVarChar(255)
+  alamat String? @db.NVarChar(255)
+  kab    String? @db.NVarChar(255)
+  lat    Float?
+  lng    Float?
+
+  @@ignore
+}
+
+model produk_compotition {
+  id               BigInt         @id(map: "PK_produk_compotition") @default(autoincrement())
+  id_master_produk Int?
+  composition      String?        @db.VarChar(50)
+  percentage       String?        @db.VarChar(50)
+  master_produk    master_produk? @relation(fields: [id_master_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_produk_compotition_master_produk")
+}
+
+model produk_dokumen {
+  id               BigInt        @id(map: "PK_produk_dokumen") @default(autoincrement())
+  id_master_produk Int
+  nomor_dokumen    String?       @db.VarChar(255)
+  masa_berlaku     DateTime?     @db.DateTime
+  dokumen          String?       @db.Text
+  nama_dokumen     String?       @db.VarChar(255)
+  master_produk    master_produk @relation(fields: [id_master_produk], references: [id], onUpdate: NoAction, map: "FK_produk_dokumen_master_produk")
+}
+
+model produk_use_procedure {
+  id               BigInt  @id(map: "PK_produk_use_procedure") @default(autoincrement())
+  id_master_produk Int
+  dosis            String? @db.VarChar(50)
+  waktu_aplikasi   String? @db.Text
+  cara_aplikasi    String? @db.Text
+  komoditi         String? @db.VarChar(255)
+}
+
+model prognosa_header {
+  id              String           @id(clustered: false, map: "prognosa_header_pk") @default(dbgenerated("newid()"), map: "DF__prognosa_hea__id__735B0927") @db.UniqueIdentifier
+  title           String           @db.VarChar(100)
+  status          Boolean?         @default(true, map: "DF__prognosa___statu__744F2D60")
+  created_at      DateTime?        @default(now(), map: "DF__prognosa___creat__75435199")
+  updated_at      DateTime?
+  generated_at    DateTime?
+  finished_at     DateTime?
+  file_name       String?          @db.VarChar(Max)
+  status_generate String?          @db.VarChar(100)
+  prognosa_value  prognosa_value[]
+}
+
+model prognosa_value {
+  id_prognosa_header String            @db.UniqueIdentifier
+  kodekab            String?           @db.NVarChar(255)
+  bulan              Float?
+  ton                Float?
+  ID                 Int               @id(map: "prognosa_value$ID") @default(autoincrement())
+  tahun              Float?
+  id_produk          Int?
+  master_produk      master_produk?    @relation(fields: [id_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_prognosa_produk_kategori")
+  master_lokasiKab   master_lokasiKab? @relation(fields: [kodekab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prognosa_value$kabsprognosa_value")
+  prognosa_header    prognosa_header   @relation(fields: [id_prognosa_header], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "prognosa_value_prognosa_header_id_fk")
+}
+
+model rabbitmq_job {
+  id         String    @id(map: "rabbitmq_job_pk") @default(dbgenerated("newid()"), map: "DF__rabbitmq_job__id__0E7913B7") @db.UniqueIdentifier
+  type       String    @db.VarChar(Max)
+  value      String    @db.VarChar(Max)
+  created_at DateTime? @default(now(), map: "DF__rabbitmq___creat__0F6D37F0") @db.DateTime
+  updated_at DateTime? @db.DateTime
+  status     String?   @db.VarChar(Max)
+}
+
+model rayon {
+  id_rayon    BigInt  @id(map: "PK_rayon") @default(autoincrement())
+  kode_anper  String? @db.VarChar(255)
+  kode_produk String? @db.VarChar(255)
+  kode_prop   String? @db.NVarChar(255)
+  kode_kab    String? @db.NVarChar(255)
+}
+
+model report_harian_kios {
+  id              String                    @id(map: "report_harian_kios_pk") @default(dbgenerated("newid()"), map: "DF__report_haria__id__7B663F43") @db.UniqueIdentifier
+  ProvinsiId      String?                   @db.VarChar(10)
+  RegionId        String?                   @db.VarChar(10)
+  totalAktivasi   BigInt?
+  totalEntry      BigInt?
+  stokUreaAda     BigInt?
+  stokUreaKosong  BigInt?
+  stokUreaMinimum BigInt?
+  stokNPKAda      BigInt?
+  stokNPKKosong   BigInt?
+  stokNPKMinimum  Int?
+  Tanggal         DateTime?                 @db.Date
+  created_at      Unsupported("timestamp")?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model report_kabupaten {
+  id               String?   @default(dbgenerated("newid()"), map: "DF__report_kabup__id__7FF5EA36") @db.UniqueIdentifier
+  tanggal          DateTime? @default(now(), map: "DF__report_ka__tangg__00EA0E6F") @db.Date
+  kab_nama         String?   @db.VarChar(255)
+  kab_kode         Int?
+  produk           String?   @db.VarChar(5)
+  kab_lat          Float?    @default(0.0, map: "DF__report_ka__kab_l__01DE32A8")
+  kab_lng          Float?    @default(0.0, map: "DF__report_ka__kab_l__02D256E1")
+  stok_lini1       Float?    @default(0, map: "DF__report_ka__stok___03C67B1A")
+  stok_lini2       Float?    @default(0, map: "DF__report_ka__stok___04BA9F53")
+  stok_hari        Float?    @default(0, map: "DF__report_ka__stok___05AEC38C")
+  alokasi_tahun    Float?    @default(0, map: "DF__report_ka__aloka__06A2E7C5")
+  intransit        Float?    @default(0, map: "DF__report_ka__intra__07970BFE")
+  stok_kios        Float?    @default(0, map: "DF__report_ka__stok___088B3037")
+  stok_distributor Float?    @default(0, map: "DF__report_ka__stok___097F5470")
+  prop_nama        String?   @db.VarChar(255)
+  prop_kode        Int?
+  realisasi_tahun  Float?
+  penyaluran_tahun Float?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model RptDODistributor {
+  produsen      String?   @db.VarChar(100)
+  idDistributor String?   @db.VarChar(20)
+  idKabupaten   String?   @db.VarChar(20)
+  orderNumber   String?   @db.VarChar(20)
+  noDO          String?   @db.VarChar(20)
+  noSO          String?   @db.VarChar(20)
+  deliveryDate  DateTime? @db.DateTime
+  produk        String?   @db.VarChar(20)
+  qty           Int?
+  createdAt     DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model RptHistorySalurDPCS {
+  KodeKios         String    @db.NVarChar(12)
+  NIK              String    @db.VarChar(16)
+  NamaPetani       String?   @db.VarChar(255)
+  NamaDesa         String?   @db.VarChar(50)
+  Kecamatan        String?   @db.VarChar(50)
+  NamaKelompokTani String?   @db.VarChar(50)
+  Komoditas        String?   @db.VarChar(50)
+  NoNota           String?   @db.VarChar(20)
+  TanggalNota      DateTime? @db.DateTime
+  Produk           String?   @db.VarChar(50)
+  Qty              Float?
+  createdAt        DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model RptPKPDistributor {
+  idDistributor String?   @db.VarChar(20)
+  noPKP         String?   @db.VarChar(15)
+  idKabupaten   String?   @db.VarChar(4)
+  idKecamatan   String?   @db.VarChar(6)
+  kodeKios      String?   @db.VarChar(15)
+  namaKios      String?   @db.VarChar(100)
+  produsen      String?   @db.VarChar(50)
+  status        String?   @db.VarChar(10)
+  tanggalPKP    DateTime? @db.DateTime
+  tanggalTerima DateTime? @db.DateTime
+  produk        String?   @db.VarChar(10)
+  produkRekan   String?   @db.VarChar(10)
+  qty           Float?
+  createdAt     DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model RptPKPDPCS {
+  NoPKP           String?   @db.NChar(20)
+  Produsen        String?   @db.VarChar(50)
+  Distributor     String?   @db.VarChar(50)
+  KodeKios        String?   @db.NVarChar(12)
+  Status          String?   @db.VarChar(50)
+  TanggalDiterima DateTime? @db.DateTime
+  TanggalPKP      DateTime? @db.DateTime
+  Produk          String?   @db.VarChar(50)
+  Qty             Float?
+  Foto1           String?   @db.VarChar(Max)
+  Foto2           String?   @db.VarChar(Max)
+  createdAt       DateTime? @db.DateTime
+
+  @@ignore
+}
+
+model RptStokDPCS {
+  KodeKios     String    @id(map: "PK_RptStokDPCS") @db.NVarChar(12)
+  NamaKios     String    @db.VarChar(200)
+  Alamat       String?   @db.VarChar(255)
+  TanggalLapor DateTime? @db.DateTime
+  Lat          Float?
+  Long         Float?
+  IdPropinsi   String?   @db.VarChar(10)
+  Propinsi     String?   @db.VarChar(50)
+  IdKabupaten  String?   @db.VarChar(10)
+  Kabupaten    String?   @db.VarChar(50)
+  IdKecamatan  String?   @db.VarChar(10)
+  Kecamatan    String?   @db.VarChar(50)
+  Urea         Float
+  NPK          Float
+  NPKKhusus    Float
+  WarnaLapor   String?   @db.VarChar(25)
+  Sumber       String?   @db.VarChar(50)
+  Foto1        String?   @db.VarChar(Max)
+  Foto2        String?   @db.VarChar(Max)
+  createdAt    DateTime? @db.DateTime
+
+  @@index([IdKabupaten], map: "idKabupaten_RptStokDPCS_1")
+  @@index([Sumber], map: "sumber_RptStokDPCS_2")
+  @@index([TanggalLapor], map: "tanggalLapor_RptStokDPCS")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model SAP_MB52 {
+  MANDT        String?   @db.NVarChar(255)
+  MATNR        String?   @db.NVarChar(255)
+  WERKS        String?   @db.NVarChar(255)
+  LGORT        String?   @db.NVarChar(255)
+  SOBKZ        String?   @db.NVarChar(255)
+  SSNUM        String?   @db.NVarChar(255)
+  PSPNR        String?   @db.NVarChar(255)
+  VBELN        String?   @db.NVarChar(255)
+  POSNR        String?   @db.NVarChar(255)
+  LIFNR        String?   @db.NVarChar(255)
+  KUNNR        String?   @db.NVarChar(255)
+  KZBWS        String?   @db.NVarChar(255)
+  CHARG        String?   @db.NVarChar(255)
+  MAKTX        String?   @db.NVarChar(255)
+  BWKEY        String?   @db.NVarChar(255)
+  MTART        String?   @db.NVarChar(255)
+  MATKL        String?   @db.NVarChar(255)
+  MEINS        String?   @db.NVarChar(255)
+  BWTTY        String?   @db.NVarChar(255)
+  XCHAR        String?   @db.NVarChar(255)
+  LGOBE        String?   @db.NVarChar(255)
+  BWTAR        String?   @db.NVarChar(255)
+  WAERS        String?   @db.NVarChar(255)
+  NAME1        String?   @db.NVarChar(255)
+  LABST        Float?
+  WLABS        Float?
+  INSME        Float?
+  WINSM        Float?
+  SPEME        Float?
+  WSPEM        Float?
+  EINME        Float?
+  WEINM        Float?
+  RETME        Float?
+  WRETM        Float?
+  UMLME        Float?
+  WUMLM        Float?
+  GLGMG        Float?
+  WGLGM        Float?
+  TRAME        Float?
+  WTRAM        Float?
+  UMLMC        Float?
+  WUMLC        Float?
+  DUMMY        String?   @db.NVarChar(255)
+  LVORM        String?   @db.NVarChar(255)
+  BWESB        Float?
+  WBWESB       Float?
+  SGT_SCAT     String?   @db.NVarChar(255)
+  OWNER        String?   @db.NVarChar(255)
+  LIFNR2       String?   @db.NVarChar(255)
+  CREATED_DATE DateTime? @db.DateTime
+
+  @@ignore
+}
+
+model sap_posto {
+  No__PO_STO              Float?    @map("No# PO STO")
+  Item_PO                 Float?    @map("Item PO")
+  Tgl__PO_STO             DateTime? @map("Tgl# PO STO") @db.DateTime
+  Kode_Produk_            String?   @map("Kode Produk#") @db.NVarChar(50)
+  Produk                  String?   @db.NVarChar(255)
+  Qty__PO_STO             Float?    @map("Qty# PO STO")
+  UoM                     String?   @db.NVarChar(255)
+  Delivery_Date           DateTime? @map("Delivery Date") @db.DateTime
+  Total_Delivery_Cost     Float?    @map("Total Delivery Cost")
+  Currency_Delivery_Cost  String?   @map("Currency Delivery Cost") @db.NVarChar(255)
+  Kode_Plant_Asal         String?   @map("Kode Plant Asal") @db.NVarChar(255)
+  Plant_Asal              String?   @map("Plant Asal") @db.NVarChar(255)
+  Kode_Provinsi_Asal      String?   @map("Kode Provinsi Asal") @db.NVarChar(255)
+  Provinsi_Asal           String?   @map("Provinsi Asal") @db.NVarChar(255)
+  Kode_Kabupaten_Asal     String?   @map("Kode Kabupaten Asal") @db.NVarChar(255)
+  Kabupaten_Asal          String?   @map("Kabupaten Asal") @db.NVarChar(255)
+  Kode_Plant_Tujuan       String?   @map("Kode Plant Tujuan") @db.NVarChar(255)
+  Plant_Tujuan            String?   @map("Plant Tujuan") @db.NVarChar(255)
+  Kode_Provinsi_Tujuan    String?   @map("Kode Provinsi Tujuan") @db.NVarChar(255)
+  Provinsi_Tujuan         String?   @map("Provinsi Tujuan") @db.NVarChar(255)
+  Kode_Kabupaten_Tujuan   String?   @map("Kode Kabupaten Tujuan") @db.NVarChar(255)
+  Kabupaten_Tujuan        String?   @map("Kabupaten Tujuan") @db.NVarChar(255)
+  Kode_Ekspeditur         Float?    @map("Kode Ekspeditur")
+  Ekspeditur              String?   @db.NVarChar(255)
+  No__DO                  Float?    @map("No# DO")
+  Item_DO                 Float?    @map("Item DO")
+  Kuantum_DO              Float?    @map("Kuantum DO")
+  Tgl__DO                 DateTime? @map("Tgl# DO") @db.DateTime
+  Pengemudi               String?   @db.NVarChar(255)
+  Kode_Alat_Angkut        String?   @map("Kode Alat Angkut") @db.NVarChar(255)
+  Alat_Angkut             String?   @map("Alat Angkut") @db.NVarChar(255)
+  ID_Alat_Angkut          String?   @map("ID Alat Angkut") @db.NVarChar(255)
+  ETA                     DateTime? @db.DateTime
+  Movement_Type           String?   @map("Movement Type") @db.NVarChar(50)
+  Deskripsi_Movement_Type String?   @map("Deskripsi Movement Type") @db.NVarChar(255)
+  No__GI                  Float?    @map("No# GI")
+  Tgl__GI                 DateTime? @map("Tgl# GI") @db.DateTime
+  Kuantum_GI              Float?    @map("Kuantum GI")
+  Realisasi_Cost          Float?    @map("Realisasi Cost")
+  Currency_Realisasi_Cost String?   @map("Currency Realisasi Cost") @db.NVarChar(255)
+  No__GR                  Float?    @map("No# GR")
+  Tgl__GR                 DateTime? @map("Tgl# GR") @db.DateTime
+  Kuantum_GR              Float?    @map("Kuantum GR")
+  Pengemudi_GR            String?   @map("Pengemudi GR") @db.NVarChar(255)
+  Alat_Angkut_GR          String?   @map("Alat Angkut GR") @db.NVarChar(255)
+  ID_Alat_Angkut_GR       String?   @map("ID Alat Angkut GR") @db.NVarChar(255)
+  No__GR_Blocked_Stock    String?   @map("No# GR Blocked Stock") @db.NVarChar(255)
+  Tgl__GR_Blocked_Stock   String?   @map("Tgl# GR Blocked Stock") @db.NVarChar(255)
+  Kuan__GR_Blocked_Stock  Float?    @map("Kuan# GR Blocked Stock")
+  No__Return_GR_DO        String?   @map("No# Return GR DO") @db.NVarChar(255)
+  Tgl__Return_GR_DO       String?   @map("Tgl# Return GR DO") @db.NVarChar(255)
+  Kuan__Return_GR_DO      Float?    @map("Kuan# Return GR DO")
+  No__GR_Selisih_Lebih    String?   @map("No# GR Selisih Lebih") @db.NVarChar(255)
+  Tgl__GR_Selisih_Lebih   String?   @map("Tgl# GR Selisih Lebih") @db.NVarChar(255)
+  Kuan__GR_Selisih_Lebih  Float?    @map("Kuan# GR Selisih Lebih")
+  No__GI_Blocked_Stock    String?   @map("No# GI Blocked Stock") @db.NVarChar(255)
+  Tgl__GI_Blocked_Stock   String?   @map("Tgl# GI Blocked Stock") @db.NVarChar(255)
+  Kuan__GI_Blocked_Stock  Float?    @map("Kuan# GI Blocked Stock")
+  Status_PO_STO           String?   @map("Status PO STO") @db.NVarChar(255)
+  Status_DO               String?   @map("Status DO") @db.NVarChar(255)
+  PO_Created_by           String?   @map("PO Created by") @db.NVarChar(255)
+  DO_Created_by           String?   @map("DO Created by") @db.NVarChar(255)
+  GI_Created_by           String?   @map("GI Created by") @db.NVarChar(255)
+  GR_Created_by           String?   @map("GR Created by") @db.NVarChar(255)
+  GR_Blocked_Created_by   String?   @map("GR Blocked Created by") @db.NVarChar(255)
+  Return_GR_Created_by    String?   @map("Return GR Created by") @db.NVarChar(255)
+  GR_Lebih_Created_by     String?   @map("GR Lebih Created by") @db.NVarChar(255)
+  GI_Blocked_Created_by   String?   @map("GI Blocked Created by") @db.NVarChar(255)
+  id                      BigInt    @id(map: "PK_allposto") @default(autoincrement())
+  DATE_SENT               DateTime? @db.DateTime
+  TIME_SENT               DateTime? @db.Time
+}
+
+model sap_sodo {
+  Nomor_DO                    String?   @map("Nomor DO") @db.NVarChar(255)
+  Delivery_Item               String?   @map("Delivery Item") @db.NVarChar(255)
+  Nomor_Sales_Order           String?   @map("Nomor Sales Order") @db.NVarChar(255)
+  Nomor_Material              String?   @map("Nomor Material") @db.NVarChar(255)
+  Deskripsi_Material          String?   @map("Deskripsi Material") @db.NVarChar(255)
+  Sales_Organization          String?   @map("Sales Organization") @db.NVarChar(255)
+  Material_Group              String?   @map("Material Group") @db.NVarChar(255)
+  Distribution_Channel        String?   @map("Distribution Channel") @db.NVarChar(255)
+  Division                    String?   @db.NVarChar(255)
+  Sales_Office                String?   @map("Sales Office") @db.NVarChar(255)
+  Deskripsi_Sales_Office      String?   @map("Deskripsi Sales Office") @db.NVarChar(255)
+  Sales_Group                 String?   @map("Sales Group") @db.NVarChar(255)
+  Deskripsi_Sales_Group       String?   @map("Deskripsi Sales Group") @db.NVarChar(255)
+  Kecamatan_SO                String?   @map("Kecamatan SO") @db.NVarChar(255)
+  Distributor                 String?   @db.NVarChar(255)
+  Nama_Distributor            String?   @map("Nama Distributor") @db.NVarChar(255)
+  Provinsi_Distributor        String?   @map("Provinsi Distributor") @db.NVarChar(255)
+  Kabupaten_Distributor       String?   @map("Kabupaten Distributor") @db.NVarChar(255)
+  Provinsi_Tujuan             String?   @map("Provinsi Tujuan") @db.NVarChar(255)
+  Deskripsi_Provinsi_Tujuan   String?   @map("Deskripsi Provinsi Tujuan") @db.NVarChar(255)
+  Negara_Tujuan               String?   @map("Negara Tujuan") @db.NVarChar(255)
+  Deskripsi_Negara_Tujuan     String?   @map("Deskripsi Negara Tujuan") @db.NVarChar(255)
+  Nomor_Kontrak               String?   @map("Nomor Kontrak") @db.NVarChar(255)
+  Tanggal_Mulai_Kontrak       DateTime? @map("Tanggal Mulai Kontrak") @db.DateTime
+  Tanggal_Berakhir_Kontrak    DateTime? @map("Tanggal Berakhir Kontrak") @db.DateTime
+  Tanggal_SO_Dibuat           DateTime? @map("Tanggal SO Dibuat") @db.DateTime
+  Payment_Method              String?   @map("Payment Method") @db.NVarChar(255)
+  Payment_Method1             String?   @map("Payment Method1") @db.NVarChar(255)
+  Payment_Term                String?   @map("Payment Term") @db.NVarChar(255)
+  Payment_Term1               String?   @map("Payment Term1") @db.NVarChar(255)
+  Batas_Akhir_Pengambilan     DateTime? @map("Batas Akhir Pengambilan") @db.DateTime
+  Kode_Gudang                 String?   @map("Kode Gudang") @db.NVarChar(255)
+  Gudang_Pengambilan          String?   @map("Gudang Pengambilan") @db.NVarChar(255)
+  Unit_of_Measure             String?   @map("Unit of Measure") @db.NVarChar(255)
+  Quantity_SO                 Float?    @map("Quantity SO")
+  Quantity_DO                 Float?    @map("Quantity DO")
+  PGI_qty                     Float?    @map("PGI qty")
+  Tanggal_Dokumen_DO          DateTime? @map("Tanggal Dokumen DO") @db.DateTime
+  Tanggal_PGI                 DateTime? @map("Tanggal PGI") @db.DateTime
+  Goods_Issue_Status          String?   @map("Goods Issue Status") @db.NVarChar(255)
+  No_Billing                  String?   @map("No Billing") @db.NVarChar(255)
+  Billing_Date                String?   @map("Billing Date") @db.NVarChar(255)
+  Status_SO                   String?   @map("Status SO") @db.NVarChar(255)
+  Status_DO                   String?   @map("Status DO") @db.NVarChar(255)
+  POD_Status                  String?   @map("POD Status") @db.NVarChar(255)
+  Alat_Angkut                 String?   @map("Alat Angkut") @db.NVarChar(255)
+  Nomor_Identitas_Alat_Angkut String?   @map("Nomor Identitas Alat Angkut") @db.NVarChar(255)
+  ETA                         DateTime? @db.DateTime
+  Pengemudi                   String?   @db.NVarChar(255)
+  Penerima                    String?   @db.NVarChar(255)
+  Remarks                     String?   @db.NVarChar(255)
+  B_L_Number                  String?   @map("B/L Number") @db.NVarChar(255)
+  Nomor_SPE                   String?   @map("Nomor SPE") @db.NVarChar(255)
+  Sisa_SPE                    Float?    @map("Sisa SPE")
+  SO_Type                     String?   @map("SO Type") @db.NVarChar(255)
+  SO_Type_Description         String?   @map("SO Type Description") @db.NVarChar(255)
+  DO_Type                     String?   @map("DO Type") @db.NVarChar(255)
+  DO_Type_Description         String?   @map("DO Type Description") @db.NVarChar(255)
+  Provinsi_Gudang             String?   @map("Provinsi Gudang") @db.NVarChar(255)
+  Kabupaten_Gudang            String?   @map("Kabupaten Gudang") @db.NVarChar(255)
+  End_User_Pengecer           String?   @map("End User/Pengecer") @db.NVarChar(255)
+  NO_PO                       String?   @map("NO PO") @db.NVarChar(255)
+  Tanggal_PO                  DateTime? @map("Tanggal PO") @db.DateTime
+  SO_Created_By               String?   @map("SO Created By") @db.NVarChar(255)
+  DO_Created_By               String?   @map("DO Created By") @db.NVarChar(255)
+  id                          Int       @id(map: "PK_sodo") @default(autoincrement())
+  DATE_SENT                   DateTime? @db.Date
+  TIME_SENT                   DateTime? @db.Time
+}
+
+model sap_stok {
+  ID        Int       @id(map: "stok$ID") @default(autoincrement())
+  produk    String?   @db.NVarChar(255)
+  plant     String?   @db.NVarChar(255)
+  blok      Float?
+  satuan    String?   @db.NVarChar(255)
+  uu        Float?
+  datetime  DateTime? @db.DateTime
+  DATE_SENT DateTime? @db.DateTime
+  TIME_SENT DateTime? @db.Time
+}
+
+model siaga_distributor_lokasi {
+  id                       BigInt                    @id(map: "PK_siaga_distributor_lokasi") @default(autoincrement())
+  distributor_id           String?                   @db.VarChar(50)
+  sales_group_id           String?                   @db.NVarChar(255)
+  state                    String?                   @db.VarChar(100)
+  master_lokasiKab         master_lokasiKab?         @relation(fields: [sales_group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_distributor_lokasi_master_lokasiKab")
+  siaga_master_distributor siaga_master_distributor? @relation(fields: [distributor_id], references: [distributor_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_distributor_lokasi_siaga_master_distributor")
+}
+
+model siaga_master_distributor {
+  distributor_id                    String                              @id(map: "PK_siaga_master_distributor") @db.VarChar(50)
+  distributor_name                  String?                             @db.VarChar(1000)
+  distributor_owner_name            String?                             @db.VarChar(100)
+  siaga_distributor_lokasi          siaga_distributor_lokasi[]
+  siaga_relasi_distributor_pengecer siaga_relasi_distributor_pengecer[]
+  siaga_spjb                        siaga_spjb[]
+  siaga_stok_distributor            siaga_stok_distributor[]
+}
+
+model siaga_master_pengecer {
+  retailer_id                       String                              @id(map: "PK_siaga_master_pengecer") @db.VarChar(50)
+  retailer_name                     String?                             @db.VarChar(100)
+  retailer_owner_name               String?                             @db.VarChar(100)
+  district_id                       String?                             @db.NVarChar(255)
+  state                             String?                             @db.VarChar(100)
+  master_lokasiKecamatan            master_lokasiKecamatan?             @relation(fields: [district_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_master_pengecer_master_lokasiKecamatan")
+  siaga_relasi_distributor_pengecer siaga_relasi_distributor_pengecer[]
+  siaga_stok_pengecer               siaga_stok_pengecer[]
+
+  @@index([state, retailer_id], map: "_dta_index_siaga_master_pengecer_6_1445580188__K5_K1_2_3")
+}
+
+model siaga_relasi_distributor_pengecer {
+  distributor_id           String?                   @db.VarChar(50)
+  retailer_id              String?                   @db.VarChar(50)
+  district_id              String?                   @db.NVarChar(255)
+  state                    String?                   @db.VarChar(100)
+  sales_org_id             String?                   @db.VarChar(50)
+  id                       BigInt                    @id(map: "PK_siaga_relasi_distributor_pengecer") @default(autoincrement())
+  master_lokasiKecamatan   master_lokasiKecamatan?   @relation(fields: [district_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_relasi_distributor_pengecer_master_lokasiKecamatan")
+  master_perusahaan        master_perusahaan?        @relation(fields: [sales_org_id], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_relasi_distributor_pengecer_master_perusahaan")
+  siaga_master_pengecer    siaga_master_pengecer?    @relation(fields: [retailer_id], references: [retailer_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_relasi_distributor_pengecer_siaga_master_pengecer")
+  siaga_master_distributor siaga_master_distributor? @relation(fields: [distributor_id], references: [distributor_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_relasi_distributor_pengecer_siaga_relasi_distributor_pengecer")
+
+  @@index([retailer_id, distributor_id, state, sales_org_id], map: "_dta_index_siaga_relasi_distributor_pengece_6_1477580302__K2_K1_K4_K5_3")
+}
+
+model siaga_spjb {
+  distributor_id           String?                   @db.VarChar(50)
+  sales_org_id             String?                   @db.VarChar(50)
+  product_id               String?                   @db.VarChar(50)
+  product_name             String?                   @db.VarChar(100)
+  district_id              String?                   @db.NVarChar(255)
+  year                     Int?
+  month                    Int?
+  month_name               String?                   @db.VarChar(50)
+  operational_qty          Float?
+  id                       BigInt                    @id(map: "PK_siaga_spjb") @default(autoincrement())
+  master_lokasiKecamatan   master_lokasiKecamatan?   @relation(fields: [district_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_spjb_kecamatan")
+  master_perusahaan        master_perusahaan?        @relation(fields: [sales_org_id], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_spjb_master_perusahaan")
+  siaga_master_distributor siaga_master_distributor? @relation(fields: [distributor_id], references: [distributor_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_spjb_siaga_master_distributor")
+}
+
+model siaga_stok_distributor {
+  stock_id                 Int?
+  distributor_id           String?                   @db.VarChar(50)
+  product_id               String?                   @db.NVarChar(50)
+  product_name             String?                   @db.NVarChar(100)
+  region_id                String?                   @db.NVarChar(255)
+  physical_stock           Float?
+  reserved_stock           Float?
+  tanggal                  DateTime?                 @db.DateTime
+  id                       BigInt                    @id(map: "PK_siaga_stok_distributor") @default(autoincrement())
+  master_lokasiKab         master_lokasiKab?         @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_stok_distributor_master_lokasiKab")
+  siaga_master_distributor siaga_master_distributor? @relation(fields: [distributor_id], references: [distributor_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_stok_distributor_siaga_master_distributor")
+}
+
+model siaga_stok_pengecer {
+  stock_id              Int?
+  retailer_id           String?                @db.VarChar(50)
+  product_id            String?                @db.NVarChar(50)
+  product_name          String?                @db.NVarChar(100)
+  physical_stock        Float?
+  reserved_stock        Float?
+  flag_bank             Int?
+  tanggal               DateTime?              @db.DateTime
+  id                    BigInt                 @id(map: "PK_siaga_stok_pengecer") @default(autoincrement())
+  siaga_master_pengecer siaga_master_pengecer? @relation(fields: [retailer_id], references: [retailer_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_siaga_stok_pengecer_siaga_master_pengecer")
+
+  @@index([retailer_id, product_id, product_name, physical_stock, reserved_stock, flag_bank], map: "_dta_index_siaga_stok_pengecer_6_1573580644__K2_K3_K4_K5_K6_K7_8")
+}
+
+model sk_gub {
+  kodekab          String?           @db.NVarChar(255)
+  bulan            Float?
+  ton              Float?
+  ID               Int               @id(map: "skgub$ID") @default(autoincrement())
+  tahun            Float?
+  id_produk        Int?
+  master_produk    master_produk?    @relation(fields: [id_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_skgub_produk_kategori")
+  master_lokasiKab master_lokasiKab? @relation(fields: [kodekab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "skgub$kabskgub")
+}
+
+model sk_mentan {
+  kode              String?            @db.NVarChar(255)
+  propinsi          String?            @db.NVarChar(255)
+  bulan             Float?
+  tahun             Float?
+  ton               Float?
+  id                Int                @id(map: "PK_sk_mentan") @default(autoincrement())
+  produk_kategori   Int?
+  kode_perusahaan   String?            @db.VarChar(50)
+  master_lokasiProp master_lokasiProp? @relation(fields: [kode], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_sk_mentan_master_lokasiProp")
+  master_perusahaan master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_sk_mentan_master_perusahaan")
+  master_produk     master_produk?     @relation(fields: [produk_kategori], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_sk_mentan_produk_kategori")
+}
+
+model sk_rkap {
+  id                 Int                @id(map: "PK_rkap") @default(autoincrement())
+  tahun              Int?
+  bulan              Int?
+  id_kategori_produk Int?
+  ton                Float?
+  kode_perusahaan    String?            @db.VarChar(50)
+  master_produk      master_produk?     @relation(fields: [id_kategori_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_rkap_produk_kategori")
+  master_perusahaan  master_perusahaan? @relation(fields: [kode_perusahaan], references: [kode_perusahaan], onDelete: NoAction, onUpdate: NoAction, map: "FK_sk_rkap_master_perusahaan")
+}
+
+model stok_plant {
+  id            String    @id(map: "PK_stok_plant") @db.UniqueIdentifier
+  id_plant      String?   @db.VarChar(50)
+  sisa_sto      Float?
+  stok_admin    Float?
+  intransit     Float?
+  sisa_so       Float?
+  min_stok      Float?
+  created_at    DateTime? @db.DateTime
+  stok_fisik    Float?
+  id_produk     Int?
+  grup          String?   @db.VarChar(50)
+  traffic_light Float?
+}
+
+model stokKab_optimum {
+  id            BigInt         @id(map: "PK_stokKab_optimum") @default(autoincrement())
+  id_kab        String?        @db.VarChar(50)
+  bulan         Int?
+  value         Float?
+  id_produk     Int?
+  master_produk master_produk? @relation(fields: [id_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_stokKab_optimum_master_produk1")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sys_calendar {
+  CalendarDate DateTime? @db.DateTime
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_stok_awal_2022 {
+  bulan     Float?
+  tahun     Float?
+  kab_kode  String? @db.NVarChar(255)
+  kab_nama  String? @db.NVarChar(255)
+  stok_hari Float?
+  produk    String? @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Test {
+  Val DateTime? @default(dbgenerated("dateadd(hour,(7),getdate())"), map: "DF__Test__Val__61FB72FB") @db.DateTime
+
+  @@ignore
+}
+
+model tracking_detail {
+  id           BigInt  @id(map: "PK__tracking__3213E83FECFCFCDE") @default(autoincrement())
+  do_number    BigInt?
+  product_id   String? @db.VarChar(30)
+  product_name String? @db.VarChar(80)
+  qty          Float?
+  uom          String? @db.VarChar(10)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tracking_exclude_route {
+  PlantAsal   String? @db.NVarChar(255)
+  PlantTujuan String? @db.NVarChar(255)
+
+  @@ignore
+}
+
+model tracking_header {
+  id               BigInt    @id(map: "PK__tracking__3213E83FFA1D41C7") @default(autoincrement())
+  do_number        BigInt?
+  do_date          DateTime? @db.Date
+  gi_date          DateTime? @db.Date
+  source_plant     String?   @db.VarChar(20)
+  dest_plant       String?   @db.VarChar(20)
+  transporter      String?   @db.VarChar(80)
+  transporter_mode String?   @db.VarChar(30)
+  plate_number     String?   @db.VarChar(100)
+  driver_name      String?   @db.VarChar(80)
+  latitude         String?   @db.VarChar(50)
+  longitude        String?   @db.VarChar(50)
+  start_time       DateTime? @db.DateTime
+  end_time         DateTime? @db.DateTime
+  status           Int?
+  last_update      DateTime? @db.DateTime
+  id_device        String?   @db.VarChar(255)
+  status_close     String?   @db.VarChar(255)
+}
+
+model tracking_history {
+  id          BigInt    @id(map: "PK__tracking__3213E83F1314EF71") @default(autoincrement())
+  do_number   BigInt?
+  latitude    String?   @db.VarChar(50)
+  longitude   String?   @db.VarChar(50)
+  last_update DateTime? @db.DateTime
+}
+
+model users_dpcs_mobile {
+  id       String  @id(clustered: false, map: "users_dpcs_mobile_pk") @default(dbgenerated("newid()"), map: "DF__users_dpcs_m__id__5D4BCC77") @db.UniqueIdentifier
+  username String  @unique(map: "users_dpcs_mobile_username_uindex") @db.VarChar(255)
+  password String  @db.VarChar(255)
+  id_role  Int?
+  fullname String? @db.VarChar(255)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model v_rpt_kab_kota {
+  product_id            String? @db.NVarChar(255)
+  nama_produk           String? @db.NVarChar(255)
+  sales_group_id        String? @db.NVarChar(255)
+  sales_office_id       String? @db.NVarChar(255)
+  kabupaten             String? @db.NVarChar(255)
+  provinsi              String? @db.NVarChar(255)
+  month                 Int?
+  year                  String? @db.NVarChar(255)
+  ketentuan             String? @db.NVarChar(255)
+  akumulasi_ketentuan   String? @db.NVarChar(255)
+  produksi              String? @db.NVarChar(255)
+  stok_kios_distributor Float?
+  penyaluran_petani     Float?
+  akumulasi_penyaluran  Float?
+
+  @@ignore
+}
+
+model xD {
+  id                 BigInt        @id(map: "PK_xD") @default(autoincrement())
+  nama               String?       @db.VarChar(50)
+  agent              String?       @db.VarChar(50)
+  versi              Float?
+  tanggal            DateTime?     @db.DateTime
+  id_skenario        BigInt?
+  drp_skenario       drp_skenario? @relation(fields: [id_skenario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xD_drp_skenario1")
+  xMaps_xMaps_xDToxD xMaps[]       @relation("xMaps_xDToxD")
+}
+
+model xDistributor {
+  id          BigInt    @id(map: "PK_xDistributor") @default(autoincrement())
+  nomor       String?   @db.VarChar(50)
+  nama        String?   @db.VarChar(100)
+  direktur    String?   @db.VarChar(100)
+  alamat      String?   @db.VarChar(500)
+  stokUrea    Float     @default(0, map: "DF_xDistributor_stokUrea")
+  stokNPK     Float?
+  stokOrganik Float?
+  stokZa      Float?
+  stokSP      Float?
+  tanggal     DateTime? @db.Date
+  xStokKab    BigInt?
+  lat         Float?
+  lng         Float?
+  subproduk   String?   @default("UREA SUBSIDI; NPK SUBSIDI", map: "DF__xDistribu__subpr__3FD07829") @db.VarChar(100)
+  kabupaten   String?   @db.VarChar(100)
+  propinsi    String?   @db.VarChar(100)
+  xKab        xKab?     @relation(fields: [xStokKab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xDistributor_xKab")
+}
+
+model xGrup {
+  id                         BigInt            @id(map: "PK_xStokGrup") @default(autoincrement())
+  nama                       String?           @db.VarChar(500)
+  nomor                      String?           @db.VarChar(500)
+  keterangan                 String?           @db.VarChar(500)
+  xGrupParent                BigInt?
+  lotsize                    Int?
+  leadtime                   Int?
+  xMap                       BigInt?
+  safetyStok                 Int?
+  id_grossreq                BigInt?
+  drp_safetyStokN            Int?
+  drp_safetyStokValue        Float?
+  alut                       String?           @db.VarChar(50)
+  bentuk                     String?           @db.VarChar(50)
+  drp_grossreqname           drp_grossreqname? @relation(fields: [id_grossreq], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xGrup_drp_grossreqname")
+  xGrup                      xGrup?            @relation("xGrupToxGrup", fields: [xGrupParent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xGrup_xGrup")
+  other_xGrup                xGrup[]           @relation("xGrupToxGrup")
+  xMaps                      xMaps?            @relation(fields: [xMap], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xGrup_xMaps")
+  xKab_xKab_xGrupToxGrup     xKab[]            @relation("xKab_xGrupToxGrup")
+  xPlant_xPlant_xGrupToxGrup xPlant[]          @relation("xPlant_xGrupToxGrup")
+}
+
+model xIntransit {
+  id           BigInt    @id(map: "PK_xIntransit") @default(autoincrement())
+  noposto      Float?
+  nodo         Float?
+  xPlantTujuan BigInt?
+  tanggalPgi   DateTime? @db.Date
+  alut         String?   @db.VarChar(50)
+  eta          DateTime? @db.Date
+  namaAlut     String?   @db.VarChar(50)
+  ton          Float?
+  kuantumGI    Float?
+  kuantumGR    String?   @db.NChar(10)
+  noMaterial   String?   @db.VarChar(50)
+  namaMaterial String?   @db.VarChar(50)
+  planAsal     String?   @db.VarChar(50)
+  planTujuan   String?   @db.VarChar(50)
+  propAsal     String?   @db.VarChar(50)
+  propTujuan   String?   @db.VarChar(50)
+  xPlant       xPlant?   @relation(fields: [xPlantTujuan], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xIntransit_xPlantTujuan")
+}
+
+model xKab {
+  id                                 BigInt         @id(map: "PK_xStokKab") @default(autoincrement())
+  nama                               String?        @db.VarChar(50)
+  nomor                              String?        @db.VarChar(50)
+  lat                                Float?
+  lng                                Float?
+  zoom                               Int?
+  xGrup                              BigInt?
+  kodeprok                           String?        @db.VarChar(50)
+  nomorAe                            String?        @db.VarChar(50)
+  namaAe                             String?        @db.VarChar(50)
+  telpAe                             String?        @db.VarChar(50)
+  nomorAAe                           String?        @db.VarChar(50)
+  namaAAe                            String?        @db.VarChar(50)
+  telpAAe                            String?        @db.VarChar(50)
+  photoae                            String?        @db.NVarChar(50)
+  photoaae                           String?        @db.NVarChar(50)
+  leader                             Int?
+  drp_safetystok                     Float?
+  xDistributor                       xDistributor[]
+  drp_kabHost                        drp_kabHost?   @relation(fields: [nomor], references: [kodekab], onDelete: NoAction, onUpdate: NoAction, map: "FK_xKab_drp_kabHost")
+  xGrup_xKab_xGrupToxGrup            xGrup?         @relation("xKab_xGrupToxGrup", fields: [xGrup], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xKab_xGrup")
+  xPengecer                          xPengecer[]
+  xPenyaluran_xPenyaluran_xKabToxKab xPenyaluran[]  @relation("xPenyaluran_xKabToxKab")
+  xSKGub_xSKGub_xKabToxKab           xSKGub[]       @relation("xSKGub_xKabToxKab")
+  xStokKab_xStokKab_xKabToxKab       xStokKab[]     @relation("xStokKab_xKabToxKab")
+}
+
+model xMaps {
+  id                       BigInt  @id(map: "PK_xMaps") @default(autoincrement())
+  nama                     String? @db.VarChar(50)
+  keterangan               String? @db.Text
+  xD                       BigInt?
+  xGrup                    xGrup[]
+  xD_xMaps_xDToxD          xD?     @relation("xMaps_xDToxD", fields: [xD], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xMaps_xD")
+  xProp_xProp_xMapsToxMaps xProp[] @relation("xProp_xMapsToxMaps")
+}
+
+model xPengecer {
+  id          BigInt    @id(map: "PK_xPengecer") @default(autoincrement())
+  xStokKab    BigInt?
+  nomor       String?   @db.VarChar(50)
+  nama        String?   @db.VarChar(200)
+  tanggal     DateTime? @db.Date
+  stokUrea    Float?
+  stokNPK     Float?
+  stokOrganik Float?
+  stokZA      Float?
+  stokSP      Float?
+  alamat      String?   @db.VarChar(500)
+  lat         Float?
+  lng         Float?
+  direktur    String?   @db.VarChar(100)
+  subproduk   String?   @default("UREA SUBSIDI; NPK SUBSIDI", map: "DF__xPengecer__subpr__40C49C62") @db.VarChar(100)
+  kabupaten   String?   @db.VarChar(100)
+  kecamatan   String?   @db.VarChar(100)
+  propinsi    String?   @db.VarChar(100)
+  xKab        xKab?     @relation(fields: [xStokKab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xPengecer_xKab")
+}
+
+model xPenyaluran {
+  id                          BigInt  @id(map: "PK_xPenyaluran") @default(autoincrement())
+  kodekab                     String? @db.VarChar(50)
+  bulan                       Float?
+  tahun                       Float?
+  alokasibulan                Float?
+  alokasitahun                Float?
+  nosubproduk                 String? @db.VarChar(50)
+  namasubproduk               String? @db.VarChar(50)
+  namaproduk                  String? @db.VarChar(50)
+  noproduk                    String? @db.VarChar(50)
+  xKab                        BigInt?
+  hari                        Float?
+  xKab_xPenyaluran_xKabToxKab xKab?   @relation("xPenyaluran_xKabToxKab", fields: [xKab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xPenyaluran_xKab")
+}
+
+model xPlant {
+  id                                 BigInt         @id(map: "PK_xPlant") @default(autoincrement())
+  nomor                              String?        @db.NVarChar(50)
+  nama                               String?        @db.VarChar(500)
+  alamat                             String?        @db.VarChar(500)
+  kapasitas                          Float?
+  lat                                Float?
+  lng                                Float?
+  keterangan                         String?        @db.VarChar(500)
+  xGrup                              BigInt?
+  kodekab                            String?        @db.VarChar(50)
+  kodeprop                           String?        @db.VarChar(50)
+  lini                               Int?
+  pelabuhan                          Int?
+  xIntransit                         xIntransit[]
+  drp_plantHost                      drp_plantHost? @relation(fields: [nomor], references: [kode], onDelete: NoAction, onUpdate: NoAction, map: "FK_xPlant_drp_plantHost")
+  xGrup_xPlant_xGrupToxGrup          xGrup?         @relation("xPlant_xGrupToxGrup", fields: [xGrup], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xPlant_xGrup")
+  xStokPlan_xStokPlan_xPlantToxPlant xStokPlan[]    @relation("xStokPlan_xPlantToxPlant")
+}
+
+model xProp {
+  id                               BigInt      @id(map: "PK_xProp") @default(autoincrement())
+  nama                             String?     @db.VarChar(50)
+  kode                             String?     @db.VarChar(50)
+  zoom                             Int?
+  lat                              Float?
+  lng                              Float?
+  xMaps                            BigInt?
+  xMaps_xProp_xMapsToxMaps         xMaps?      @relation("xProp_xMapsToxMaps", fields: [xMaps], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xProp_xMaps")
+  xSKMentan_xSKMentan_xPropToxProp xSKMentan[] @relation("xSKMentan_xPropToxProp")
+}
+
+model xSKGub {
+  id                     BigInt    @id(map: "PK__xSKGub__3213E83F7B111A37") @default(autoincrement())
+  ton                    Float?
+  tanggal                DateTime? @db.Date
+  xKab                   BigInt?
+  skGubBulan             Float?
+  noSubProduk            String?   @db.VarChar(50)
+  namaSubProduk          String?   @db.VarChar(50)
+  skGubTahun             Float?
+  jumlahHari             Int?
+  kodekab                String?   @db.VarChar(50)
+  xKab_xSKGub_xKabToxKab xKab?     @relation("xSKGub_xKabToxKab", fields: [xKab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xSKGub_xKab")
+}
+
+model xSKMentan {
+  id                           BigInt    @id(map: "PK_xSKMentan") @default(autoincrement())
+  ton                          Float?
+  xProp                        BigInt?
+  tanggal                      DateTime? @db.Date
+  skMentanBukan                Float?
+  noSubProduk                  String?   @db.VarChar(50)
+  namaSubProduk                String?   @db.VarChar(50)
+  skMentanTahun                Float?
+  jumlahHari                   Int?
+  kodeprop                     String?   @db.VarChar(50)
+  xProp_xSKMentan_xPropToxProp xProp?    @relation("xSKMentan_xPropToxProp", fields: [xProp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xSKMentan_xProp")
+}
+
+model xStokKab {
+  id                       BigInt    @id(map: "PK__xStokKab__3213E83F226998EF") @default(autoincrement())
+  ton                      Float?
+  tanggal                  DateTime? @db.Date
+  xKab                     BigInt?
+  noSubProduk              String?   @db.VarChar(50)
+  namaProduk               String?   @db.VarChar(50)
+  minstok                  Float?
+  stokgrup                 Float?
+  stokdayover              Float?
+  kodekab                  String?   @db.VarChar(50)
+  tonlini2                 Float?
+  tonlini1                 Float?
+  xKab_xStokKab_xKabToxKab xKab?     @relation("xStokKab_xKabToxKab", fields: [xKab], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xStokKab_xKab")
+}
+
+model xStokPlan {
+  id                              BigInt    @id(map: "PK_xStokPlan") @default(autoincrement())
+  UU                              Float?
+  blok                            Float?
+  tanggal                         DateTime? @db.Date
+  xPlant                          BigInt?
+  noMaterial                      String?   @db.VarChar(50)
+  namaMaterial                    String?   @db.VarChar(50)
+  kodeplan                        String?   @db.VarChar(50)
+  noSubProduk                     String?   @db.VarChar(50)
+  namaSubProduk                   String?   @db.VarChar(50)
+  noProduk                        String?   @db.VarChar(50)
+  namaProduk                      String?   @db.VarChar(50)
+  xPlant_xStokPlan_xPlantToxPlant xPlant?   @relation("xStokPlan_xPlantToxPlant", fields: [xPlant], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xStokPlan_xPlant")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ZMMR22 {
+  No__PO_STO              Float?    @map("No# PO STO")
+  Item_PO                 Float?    @map("Item PO")
+  Tgl__PO_STO             DateTime? @map("Tgl# PO STO") @db.DateTime
+  Kode_Produk_            String?   @map("Kode Produk#") @db.NVarChar(50)
+  Produk                  String?   @db.NVarChar(255)
+  Qty__PO_STO             Float?    @map("Qty# PO STO")
+  UoM                     String?   @db.NVarChar(255)
+  Delivery_Date           DateTime? @map("Delivery Date") @db.DateTime
+  Total_Delivery_Cost     Float?    @map("Total Delivery Cost")
+  Currency_Delivery_Cost  String?   @map("Currency Delivery Cost") @db.NVarChar(255)
+  Kode_Plant_Asal         String?   @map("Kode Plant Asal") @db.NVarChar(255)
+  Plant_Asal              String?   @map("Plant Asal") @db.NVarChar(255)
+  Kode_Provinsi_Asal      String?   @map("Kode Provinsi Asal") @db.NVarChar(255)
+  Provinsi_Asal           String?   @map("Provinsi Asal") @db.NVarChar(255)
+  Kode_Kabupaten_Asal     String?   @map("Kode Kabupaten Asal") @db.NVarChar(255)
+  Kabupaten_Asal          String?   @map("Kabupaten Asal") @db.NVarChar(255)
+  Kode_Plant_Tujuan       String?   @map("Kode Plant Tujuan") @db.NVarChar(255)
+  Plant_Tujuan            String?   @map("Plant Tujuan") @db.NVarChar(255)
+  Kode_Provinsi_Tujuan    String?   @map("Kode Provinsi Tujuan") @db.NVarChar(255)
+  Provinsi_Tujuan         String?   @map("Provinsi Tujuan") @db.NVarChar(255)
+  Kode_Kabupaten_Tujuan   String?   @map("Kode Kabupaten Tujuan") @db.NVarChar(255)
+  Kabupaten_Tujuan        String?   @map("Kabupaten Tujuan") @db.NVarChar(255)
+  Kode_Ekspeditur         Float?    @map("Kode Ekspeditur")
+  Ekspeditur              String?   @db.NVarChar(255)
+  No__DO                  Float?    @map("No# DO")
+  Item_DO                 Float?    @map("Item DO")
+  Kuantum_DO              Float?    @map("Kuantum DO")
+  Tgl__DO                 DateTime? @map("Tgl# DO") @db.DateTime
+  Pengemudi               String?   @db.NVarChar(255)
+  Kode_Alat_Angkut        String?   @map("Kode Alat Angkut") @db.NVarChar(255)
+  Alat_Angkut             String?   @map("Alat Angkut") @db.NVarChar(255)
+  ID_Alat_Angkut          String?   @map("ID Alat Angkut") @db.NVarChar(255)
+  ETA                     DateTime? @db.DateTime
+  Movement_Type           String?   @map("Movement Type") @db.NVarChar(50)
+  Deskripsi_Movement_Type String?   @map("Deskripsi Movement Type") @db.NVarChar(255)
+  No__GI                  Float?    @map("No# GI")
+  Tgl__GI                 DateTime? @map("Tgl# GI") @db.DateTime
+  Kuantum_GI              Float?    @map("Kuantum GI")
+  Realisasi_Cost          Float?    @map("Realisasi Cost")
+  Currency_Realisasi_Cost String?   @map("Currency Realisasi Cost") @db.NVarChar(255)
+  No__GR                  Float?    @map("No# GR")
+  Tgl__GR                 DateTime? @map("Tgl# GR") @db.DateTime
+  Kuantum_GR              Float?    @map("Kuantum GR")
+  Pengemudi_GR            String?   @map("Pengemudi GR") @db.NVarChar(255)
+  Alat_Angkut_GR          String?   @map("Alat Angkut GR") @db.NVarChar(255)
+  ID_Alat_Angkut_GR       String?   @map("ID Alat Angkut GR") @db.NVarChar(255)
+  No__GR_Blocked_Stock    String?   @map("No# GR Blocked Stock") @db.NVarChar(255)
+  Tgl__GR_Blocked_Stock   DateTime? @map("Tgl# GR Blocked Stock") @db.Date
+  Kuan__GR_Blocked_Stock  Float?    @map("Kuan# GR Blocked Stock")
+  No__Return_GR_DO        String?   @map("No# Return GR DO") @db.NVarChar(255)
+  Tgl__Return_GR_DO       String?   @map("Tgl# Return GR DO") @db.NVarChar(255)
+  Kuan__Return_GR_DO      Float?    @map("Kuan# Return GR DO")
+  No__GR_Selisih_Lebih    String?   @map("No# GR Selisih Lebih") @db.NVarChar(255)
+  Tgl__GR_Selisih_Lebih   String?   @map("Tgl# GR Selisih Lebih") @db.NVarChar(255)
+  Kuan__GR_Selisih_Lebih  Float?    @map("Kuan# GR Selisih Lebih")
+  No__GI_Blocked_Stock    String?   @map("No# GI Blocked Stock") @db.NVarChar(255)
+  Tgl__GI_Blocked_Stock   String?   @map("Tgl# GI Blocked Stock") @db.NVarChar(255)
+  Kuan__GI_Blocked_Stock  Float?    @map("Kuan# GI Blocked Stock")
+  Status_PO_STO           String?   @map("Status PO STO") @db.NVarChar(255)
+  Status_DO               String?   @map("Status DO") @db.NVarChar(255)
+  PO_Created_by           String?   @map("PO Created by") @db.NVarChar(255)
+  DO_Created_by           String?   @map("DO Created by") @db.NVarChar(255)
+  GI_Created_by           String?   @map("GI Created by") @db.NVarChar(255)
+  GR_Created_by           String?   @map("GR Created by") @db.NVarChar(255)
+  GR_Blocked_Created_by   String?   @map("GR Blocked Created by") @db.NVarChar(255)
+  Return_GR_Created_by    String?   @map("Return GR Created by") @db.NVarChar(255)
+  GR_Lebih_Created_by     String?   @map("GR Lebih Created by") @db.NVarChar(255)
+  GI_Blocked_Created_by   String?   @map("GI Blocked Created by") @db.NVarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ZMMR22TEMP {
+  No__PO_STO              String?   @map("No# PO STO") @db.NVarChar(255)
+  Tgl__PO_STO             DateTime? @map("Tgl# PO STO") @db.DateTime
+  Kode_Plant_Asal         String?   @map("Kode Plant Asal") @db.NVarChar(255)
+  Plant_Asal              String?   @map("Plant Asal") @db.NVarChar(255)
+  Kode_Plant_Tujuan       String?   @map("Kode Plant Tujuan") @db.NVarChar(255)
+  Plant_Tujuan            String?   @map("Plant Tujuan") @db.NVarChar(255)
+  Ekspeditur              String?   @db.NVarChar(255)
+  Item_PO                 String?   @map("Item PO") @db.NVarChar(255)
+  Kode_Produk_            String?   @map("Kode Produk#") @db.NVarChar(255)
+  Produk                  String?   @db.NVarChar(255)
+  Qty__PO_STO             Float?    @map("Qty# PO STO")
+  Total_Delivery_Cost     Float?    @map("Total Delivery Cost")
+  UoM                     String?   @db.NVarChar(255)
+  Realisasi_Cost          Float?    @map("Realisasi Cost")
+  Currency_Delivery_Cost  String?   @map("Currency Delivery Cost") @db.NVarChar(255)
+  Currency_Realisasi_Cost String?   @map("Currency Realisasi Cost") @db.NVarChar(255)
+  Kode_Provinsi_Asal      String?   @map("Kode Provinsi Asal") @db.NVarChar(255)
+  Provinsi_Asal           String?   @map("Provinsi Asal") @db.NVarChar(255)
+  Kabupaten_Asal          String?   @map("Kabupaten Asal") @db.NVarChar(255)
+  Provinsi_Tujuan         String?   @map("Provinsi Tujuan") @db.NVarChar(255)
+  Kabupaten_Tujuan        String?   @map("Kabupaten Tujuan") @db.NVarChar(255)
+  Delivery_Date           DateTime? @map("Delivery Date") @db.DateTime
+  Kode_Kabupaten_Asal     String?   @map("Kode Kabupaten Asal") @db.NVarChar(255)
+  Kode_Provinsi_Tujuan    String?   @map("Kode Provinsi Tujuan") @db.NVarChar(255)
+  Kode_Kabupaten_Tujuan   String?   @map("Kode Kabupaten Tujuan") @db.NVarChar(255)
+  Kode_Ekspeditur         String?   @map("Kode Ekspeditur") @db.NVarChar(255)
+  Kode_Alat_Angkut        String?   @map("Kode Alat Angkut") @db.NVarChar(255)
+  Alat_Angkut             String?   @map("Alat Angkut") @db.NVarChar(255)
+  Tgl__GI                 DateTime? @map("Tgl# GI") @db.DateTime
+  No__DO                  String?   @map("No# DO") @db.NVarChar(255)
+  Item_DO                 String?   @map("Item DO") @db.NVarChar(255)
+  Kuantum_DO              Float?    @map("Kuantum DO")
+  Tgl__DO                 DateTime? @map("Tgl# DO") @db.DateTime
+  Pengemudi               String?   @db.NVarChar(255)
+  ID_Alat_Angkut          String?   @map("ID Alat Angkut") @db.NVarChar(255)
+  ETA                     DateTime? @db.DateTime
+  Deskripsi_Movement_Type String?   @map("Deskripsi Movement Type") @db.NVarChar(255)
+  No__GI                  String?   @map("No# GI") @db.NVarChar(255)
+  Kuantum_GI              Float?    @map("Kuantum GI")
+  No__GR                  String?   @map("No# GR") @db.NVarChar(255)
+  Tgl__GR                 DateTime? @map("Tgl# GR") @db.DateTime
+  Kuantum_GR              Float?    @map("Kuantum GR")
+  Pengemudi_GR            String?   @map("Pengemudi GR") @db.NVarChar(255)
+  Alat_Angkut_GR          String?   @map("Alat Angkut GR") @db.NVarChar(255)
+  ID_Alat_Angkut_GR       String?   @map("ID Alat Angkut GR") @db.NVarChar(255)
+  No__Return_GR_DO        String?   @map("No# Return GR DO") @db.NVarChar(255)
+  Tgl__Return_GR_DO       DateTime? @map("Tgl# Return GR DO") @db.DateTime
+  Kuan__Return_GR_DO      Float?    @map("Kuan# Return GR DO")
+  No__GR_Selisih_Lebih    String?   @map("No# GR Selisih Lebih") @db.NVarChar(255)
+  Tgl__GR_Selisih_Lebih   DateTime? @map("Tgl# GR Selisih Lebih") @db.DateTime
+  Kuan__GR_Selisih_Lebih  Float?    @map("Kuan# GR Selisih Lebih")
+  Status_PO_STO           String?   @map("Status PO STO") @db.NVarChar(255)
+  No__GR_Blocked_Stock    String?   @map("No# GR Blocked Stock") @db.NVarChar(255)
+  Status_DO               String?   @map("Status DO") @db.NVarChar(255)
+  Tgl__GR_Blocked_Stock   DateTime? @map("Tgl# GR Blocked Stock") @db.DateTime
+  PO_Created_by           String?   @map("PO Created by") @db.NVarChar(255)
+  Kuan__GR_Blocked_Stock  Float?    @map("Kuan# GR Blocked Stock")
+  DO_Created_by           String?   @map("DO Created by") @db.NVarChar(255)
+  No__GI_Blocked_Stock    String?   @map("No# GI Blocked Stock") @db.NVarChar(255)
+  GI_Created_by           String?   @map("GI Created by") @db.NVarChar(255)
+  Tgl__GI_Blocked_Stock   DateTime? @map("Tgl# GI Blocked Stock") @db.DateTime
+  GR_Created_by           String?   @map("GR Created by") @db.NVarChar(255)
+  Return_GR_Created_by    String?   @map("Return GR Created by") @db.NVarChar(255)
+  Keterangan              String?   @db.NVarChar(255)
+  Kuan__GI_Blocked_Stock  Float?    @map("Kuan# GI Blocked Stock")
+  GR_Lebih_Created_by     String?   @map("GR Lebih Created by") @db.NVarChar(255)
+  Movement_Type           String?   @map("Movement Type") @db.NVarChar(255)
+  GR_Blocked_Created_by   String?   @map("GR Blocked Created by") @db.NVarChar(255)
+  GI_Blocked_Created_by   String?   @map("GI Blocked Created by") @db.NVarChar(255)
+
+  @@ignore
+}
