@@ -174,7 +174,92 @@ async function GetPortPetroportLini2() {
 async function GetDataPKG() {
   console.log('start generate PKG')
   const apiResponse = await axios.get(
-    "https://petroport.petrokimia-gresik.com/api/pi/v1/get-vessel-arrival?secret_token=8AhJ17M=sWnitA9oxh7ZLy?V/cAvwIP=iCSmUCsyB2iDl=rUuIIXGlBJ1EJOEpPDpR32CP/SaxSAwCoiWFZ!4eMOutj4lucIUPW99Ym-I0vWJyk2ZQ8pyMxA8qwYZdyXPlyELdYhng?=/h/W1tP8WXFNYR=7oPCZCgwVslAvZ8fsbMIzGTjWxEAuUDob7NjHk1zh7zL2HFTHZukks!bVUl9FAT8BFSiLDETdvswYdVY?n?rRj-gi2VFz6JcVG1c7"
+    "https://petroport.petrokimia-gresik.com/api/pi/v1/get-vessel-arrival?arrival_type=Loading&procurement=Import&from=2025-01-01&to=2030-12-31&secret_token=8AhJ17M=sWnitA9oxh7ZLy?V/cAvwIP=iCSmUCsyB2iDl=rUuIIXGlBJ1EJOEpPDpR32CP/SaxSAwCoiWFZ!4eMOutj4lucIUPW99Ym-I0vWJyk2ZQ8pyMxA8qwYZdyXPlyELdYhng?=/h/W1tP8WXFNYR=7oPCZCgwVslAvZ8fsbMIzGTjWxEAuUDob7NjHk1zh7zL2HFTHZukks!bVUl9FAT8BFSiLDETdvswYdVY?n?rRj-gi2VFz6JcVG1c7"
+  );
+  const data = apiResponse.data;
+
+  console.log(data)
+
+  data.filter(f => f.time_berthing !== null && (f.stack <= 1) && f.id_jetty_part !== null && f.id_jetty_part >= 1 && f.id_jetty_part <= 7).map((value) => {
+    let position = "top";
+    if (value.id_jetty_part > 4 && value.id_jetty_part <= 7) {
+      position = "bottom";
+    }
+    console.log(value)
+    
+    let data = {
+      id_jetty: value.id_jetty,
+      jetty: value.jetty,
+      name: value.vessel,
+      description: value.arrival_type || "Antri",
+      location: value.meter_start,
+      asal: value.description,
+      volume: 0,
+      product: '',
+      position: position,
+      length: value.loa,
+      progress: 0,
+      flip: value.flip
+    }
+    if (data.position === 'top') {
+      data.flip = !data.flip
+    }
+
+    const products = _.unionBy(value.cargo, 'name_cargo')
+    value.cargo.map((values, index) => {
+        data.asal = values.origin
+        //data.volume += values.tonnage_total
+        data.progress += values.tonnage_progress
+    })
+
+    products.map((values, index) => {
+        data.product += `${values.name_cargo},`
+    })
+    data.volume = value.bl_tonnage
+    data.progress = data.progress / data.volume * 100
+    // if (!data.flip) {
+    //   data.location = data.location - data.length
+    // }
+    ports[0].vessels.push(data)
+  });
+
+
+  let data1 = ports[0].vessels
+  const sortedData = data1.sort((a, b) => {
+      if (a.position === b.position) {
+          return a.location - b.location;
+      } else {
+          return a.position === 'top' ? -1 : 1;
+      }
+  });
+  // Memperbaiki location berdasarkan aturan yang diberikan
+  let prevLocationTop = 0;
+  let prevLengthTop = 0;
+  let prevLocationBottom = 0;
+  let prevLengthBottom = 0;
+  sortedData.forEach(item => {
+      if (item.position === 'top') {
+          if (item.location < prevLocationTop) {
+              item.location = prevLocationTop + prevLengthTop + 10;
+          }
+          prevLocationTop = item.location;
+          prevLengthTop = parseFloat(item.length);
+      } else {
+          if (item.location <= prevLocationBottom + prevLengthBottom) {
+              item.location = prevLocationBottom + prevLengthBottom + 50;
+          }
+          prevLocationBottom = item.location;
+          prevLengthBottom = parseFloat(item.length);
+      }
+  });
+
+  ports[0].vessels = sortedData
+}
+
+async function GetDataPKGDischarging() {
+  console.log('start generate PKG')
+  const apiResponse = await axios.get(
+    "https://petroport.petrokimia-gresik.com/api/pi/v1/get-vessel-arrival?arrival_type=Discharging&procurement=Import&from=2025-01-01&to=2030-12-31&secret_token=8AhJ17M=sWnitA9oxh7ZLy?V/cAvwIP=iCSmUCsyB2iDl=rUuIIXGlBJ1EJOEpPDpR32CP/SaxSAwCoiWFZ!4eMOutj4lucIUPW99Ym-I0vWJyk2ZQ8pyMxA8qwYZdyXPlyELdYhng?=/h/W1tP8WXFNYR=7oPCZCgwVslAvZ8fsbMIzGTjWxEAuUDob7NjHk1zh7zL2HFTHZukks!bVUl9FAT8BFSiLDETdvswYdVY?n?rRj-gi2VFz6JcVG1c7"
   );
   const data = apiResponse.data;
 
@@ -410,7 +495,7 @@ async function GetDataPSP() {
       ports[2].vessels.push(data);
     }
 
-    if (port === "PSP_DermagaIV_7" || port === "PSP_DermagaIII_3" || port === "PSP_DermagaIII_7") {
+    if (port === "PSP_DermagaIV_7" || port === "PSP_DermagaIII_3" || port === "PSP_DermagaIII_7" || port === "PSP_DermagaIV_3") {
       if (data.length === 0) {
         data.length = ports[3].length/4
       }
@@ -527,6 +612,12 @@ async function main() {
 
   try {
     await GetDataPKG();
+  } catch (error) {
+    console.log(error)
+  }
+
+  try {
+    await GetDataPKGDischarging();
   } catch (error) {
     console.log(error)
   }
