@@ -11,7 +11,7 @@ Jobs:
 
 function resolveJob(argument) {
   const job = argument || 'all';
-  if (job === 'all') return Object.values(jobs);
+  if (job === 'all') return [jobs.tracking, jobs.ports];
   if (jobs[job]) return [jobs[job]];
   return null;
 }
