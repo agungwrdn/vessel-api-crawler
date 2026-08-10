@@ -39,7 +39,14 @@
     ]
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js tracking",
+    "start:all": "node src/app.js all",
+    "start:tracking": "node src/app.js tracking",
+    "start:stock": "node src/app.js stock",
+    "start:ports": "node src/app.js ports",
+    "build": "node build.js",
+    "build:ports": "node build-port.js",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",

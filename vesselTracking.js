@@ -64,11 +64,16 @@ async function main() {
   }
 }
 
-// jalanin sekali
-main()
-
-// jalanin tiap 1 jam
-setInterval(() => {
-  console.log('Ambil GPS baru...')
+function start(intervalMs = 1 * 60 * 60 * 1000) {
   main()
-}, 1 * 60 * 60 * 1000)
+  return setInterval(() => {
+    console.log('Ambil GPS baru...')
+    main()
+  }, intervalMs)
+}
+
+if (require.main === module) {
+  start()
+}
+
+module.exports = { main, start }

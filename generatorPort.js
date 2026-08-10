@@ -1,10 +1,15 @@
 const axios = require("axios");
 const _ = require("lodash");
 const { createClient } = require("redis");
-const client = createClient();
-client.on('error', err => console.log('Redis Client Error', err));
+let client;
 
-client.connect();
+async function connectRedis() {
+  if (client) return client
+  client = createClient()
+  client.on('error', err => console.log('Redis Client Error', err))
+  await client.connect()
+  return client
+}
 let ports = [
   {
     //dermaga petro
@@ -599,6 +604,7 @@ async function GetDataPKT() {
 }
 
 async function main() {
+  await connectRedis()
   try {
     await client.DEL("port_vessel_v2")
   } catch (error) {
@@ -795,9 +801,16 @@ async function main() {
   console.log("DONE")
 }
 
-main()
-
-setInterval(function () {
-  console.log('The answer to life, the universe, and everything!');
+function start(intervalMs = 1 * 60 * 60 * 1000) {
   main()
-}, 1 * 60 * 60 * 1000); 
+  return setInterval(function () {
+    console.log('Generating port data...')
+    main()
+  }, intervalMs)
+}
+
+if (require.main === module) {
+  start()
+}
+
+module.exports = { main, start }

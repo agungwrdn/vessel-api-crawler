@@ -199,7 +199,7 @@ Demikian disampaikan agar bisa ditindaklanjuti, terima kasih
 
 *Pesan ini dikirimkah Melalui sistem Notifikasi otomatis Aplikasi Rekan pada tanggal ${moment().locale('id').format('DD MMMM YYYY')} Jam ${moment().locale('id').format('HH:mm')} WIB*
   `
-  contact.forEach(async value => {
+  await Promise.all(contact.map(async value => {
     console.log('do Sent to:', value.name)
     await axios.post(
       `https://api.wassenger.com/v1/messages`, {
@@ -213,8 +213,14 @@ Demikian disampaikan agar bisa ditindaklanjuti, terima kasih
     ).then(result => {
       console.log('Finish sent to:', value.name)
     });
-  })
+  }))
 };
 
-broadcastStokReport();
+if (require.main === module) {
+  broadcastStokReport().catch((error) => {
+    console.error('Broadcast error:', error.message)
+    process.exitCode = 1
+  })
+}
 
+module.exports = { broadcastStokReport }
