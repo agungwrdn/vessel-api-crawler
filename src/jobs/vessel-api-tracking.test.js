@@ -1,7 +1,15 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
 
-const { normalizePosition, savePosition } = require('./vessel-api-tracking')
+const { normalizePosition, savePosition, parseMmsis, runOnce } = require('./vessel-api-tracking')
+
+test('parses a comma-separated MMSI configuration', () => {
+  assert.deepEqual(parseMmsis('525901923, 525006415,,525301532'), [
+    '525901923',
+    '525006415',
+    '525301532',
+  ])
+})
 
 test('normalizes VesselAPI position response for the GPS schema', () => {
   const position = normalizePosition({
@@ -72,4 +80,43 @@ test('saves the current vessel and GPS history using the GPS timestamp', async (
       },
     }],
   ])
+})
+
+test('fetches and saves every configured vessel', async () => {
+  const saved = []
+  const http = {
+    get: async (url) => ({
+      data: {
+        vesselPosition: {
+          mmsi: url.includes('525901923') ? '525901923' : '525006415',
+          vessel_name: 'TEST VESSEL',
+          latitude: -6.2,
+          longitude: 106.8,
+          timestamp: '2026-08-10T00:00:00Z',
+        },
+      },
+    }),
+  }
+  const client = {
+    device_gps: { upsert: async () => {} },
+    device_gpsHits: {
+      create: async ({ data }) => {
+        saved.push(data.ObjectID)
+        return data
+      },
+    },
+  }
+
+  const positions = await runOnce({
+    mmsis: ['525901923', '525006415'],
+    apiKey: 'test-key',
+    http,
+    client,
+  })
+
+  assert.deepEqual(positions.map((position) => position.mmsi), [
+    '525901923',
+    '525006415',
+  ])
+  assert.deepEqual(saved, ['525901923', '525006415'])
 })

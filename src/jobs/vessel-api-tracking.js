@@ -12,6 +12,13 @@ const API_URL = process.env.VESSELAPI_URL || 'https://api.vesselapi.com/v1'
 const MMSI = process.env.VESSELAPI_MMSI || '525901342'
 const INTERVAL_MS = 3 * 60 * 60 * 1000
 
+function parseMmsis(value = MMSI) {
+  return String(value)
+    .split(',')
+    .map((mmsi) => mmsi.trim())
+    .filter(Boolean)
+}
+
 function normalizePosition(payload) {
   const position = payload && (payload.vesselPosition || payload.position)
   if (!position || position.latitude == null || position.longitude == null) {
@@ -28,10 +35,10 @@ function normalizePosition(payload) {
   }
 }
 
-async function fetchPosition({ apiKey = process.env.VESSELAPI_API_KEY, http = axios } = {}) {
+async function fetchPosition({ mmsi = MMSI, apiKey = process.env.VESSELAPI_API_KEY, http = axios } = {}) {
   if (!apiKey) throw new Error('VESSELAPI_API_KEY belum diisi')
 
-  const response = await http.get(`${API_URL}/vessel/${MMSI}/position`, {
+  const response = await http.get(`${API_URL}/vessel/${mmsi}/position`, {
     params: { 'filter.idType': 'mmsi' },
     headers: { Authorization: `Bearer ${apiKey}` },
     timeout: 30_000,
@@ -65,11 +72,21 @@ async function savePosition(position, client = prisma) {
   })
 }
 
-async function runOnce() {
-  const position = await fetchPosition()
-  await savePosition(position)
-  console.log(`[VesselAPI] ${position.mmsi} ${position.latitude},${position.longitude}`)
-  return position
+async function runOnce({ mmsis = parseMmsis(), apiKey, http = axios, client = prisma } = {}) {
+  const positions = []
+
+  for (const mmsi of mmsis) {
+    try {
+      const position = await fetchPosition({ mmsi, apiKey, http })
+      await savePosition(position, client)
+      console.log(`[VesselAPI] ${position.mmsi} ${position.latitude},${position.longitude}`)
+      positions.push(position)
+    } catch (error) {
+      console.error(`[VesselAPI] ${mmsi} gagal:`, error.message)
+    }
+  }
+
+  return positions
 }
 
 function start(intervalMs = INTERVAL_MS) {
@@ -92,4 +109,4 @@ function start(intervalMs = INTERVAL_MS) {
 
 if (require.main === module) start()
 
-module.exports = { fetchPosition, normalizePosition, runOnce, savePosition, start }
+module.exports = { fetchPosition, normalizePosition, parseMmsis, runOnce, savePosition, start }
