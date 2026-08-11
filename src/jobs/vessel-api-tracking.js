@@ -10,7 +10,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const API_URL = process.env.VESSELAPI_URL || 'https://api.vesselapi.com/v1'
 const MMSI = process.env.VESSELAPI_MMSI || '525901342'
-const INTERVAL_MS = 6 * 60 * 60 * 1000
+const INTERVAL_MS = 3 * 60 * 60 * 1000
 
 function normalizePosition(payload) {
   const position = payload && (payload.vesselPosition || payload.position)

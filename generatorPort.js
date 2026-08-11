@@ -183,15 +183,11 @@ async function GetDataPKG() {
   );
   const data = apiResponse.data;
 
-  console.log(data)
-
   data.filter(f => f.time_berthing !== null && (f.stack <= 1) && f.id_jetty_part !== null && f.id_jetty_part >= 1 && f.id_jetty_part <= 7).map((value) => {
     let position = "top";
     if (value.id_jetty_part > 4 && value.id_jetty_part <= 7) {
       position = "bottom";
     }
-    console.log(value)
-    
     let data = {
       id_jetty: value.id_jetty,
       jetty: value.jetty,
@@ -268,15 +264,11 @@ async function GetDataPKGDischarging() {
   );
   const data = apiResponse.data;
 
-  console.log(data)
-
   data.filter(f => f.time_berthing !== null && (f.stack <= 1) && f.id_jetty_part !== null && f.id_jetty_part >= 1 && f.id_jetty_part <= 7).map((value) => {
     let position = "top";
     if (value.id_jetty_part > 4 && value.id_jetty_part <= 7) {
       position = "bottom";
     }
-    console.log(value)
-    
     let data = {
       id_jetty: value.id_jetty,
       jetty: value.jetty,
@@ -455,8 +447,6 @@ async function GetDataPSP() {
     "https://gwkong.pusri.co.id/teman-pi-prod/dashboard/vessel?secret_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBUEkgVEVNQU4gUFVTUkktRGFzaGJvYXJkIFBJIiwicm9sZV9uYW1lIjoic3VwZXIiLCJyb2xlX3VpZCI6IjYwM2YwYTg1LTBkMmEtNDY3My05MmVlLWQzNmE3MTc2MmQ0NiIsInVzZXJuYW1lIjoic3VwZXIifQ.y-Ga6QHa6TjzY1PiX6g_i_r3Sao0al2Zhsfh4nCh8ok"
   );
 
-  console.log()
-
   const data = apiResponse.data.data;
 
   data.map((value) => {
@@ -496,7 +486,6 @@ async function GetDataPSP() {
       if (ports[2].vessels.length > 0) {
         data.location = ports[2].vessels[ports[2].vessels.length - 1].length
       }
-      console.log(data)
       ports[2].vessels.push(data);
     }
 
