@@ -40,10 +40,10 @@ async function fetchPosition({ apiKey = process.env.VESSELAPI_API_KEY, http = ax
   return normalizePosition(response.data)
 }
 
-async function savePosition(position) {
+async function savePosition(position, client = prisma) {
   const gpsTime = new Date(position.timestamp)
 
-  await prisma.device_gps.upsert({
+  await client.device_gps.upsert({
     where: { id: position.mmsi },
     update: { keterangan: 'VesselAPI', nama_kapal: position.name },
     create: {
@@ -53,14 +53,14 @@ async function savePosition(position) {
     },
   })
 
-  return prisma.device_gpsHits.create({
+  return client.device_gpsHits.create({
     data: {
       ObjectID: position.mmsi,
       Lat: position.latitude,
       Lon: position.longitude,
       Speed: position.speed,
       GPSTime: gpsTime,
-      LastDataTime: new Date(),
+      LastDataTime: gpsTime,
     },
   })
 }
