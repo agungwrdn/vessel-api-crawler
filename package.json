@@ -42,6 +42,7 @@
     "start": "node src/app.js tracking",
     "start:all": "node src/app.js all",
     "start:tracking": "node src/app.js tracking",
+    "start:lancar": "node src/app.js lancar",
     "start:stock": "node src/app.js stock",
     "start:ports": "node src/app.js ports",
     "build": "node build.js",

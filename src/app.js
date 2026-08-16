@@ -4,6 +4,7 @@ const usage = `Usage: node src/app.js <job>
 
 Jobs:
   tracking  Collect vessel GPS data
+  lancar    Collect KM. Lancar Berkat Prima last GPS position
   stock     Broadcast stock report
   ports     Generate port data
   all       Start all jobs (default)
@@ -11,7 +12,7 @@ Jobs:
 
 function resolveJob(argument) {
   const job = argument || 'all';
-  if (job === 'all') return [jobs.tracking, jobs.ports];
+  if (job === 'all') return [jobs.tracking, jobs.lancar, jobs.ports];
   if (jobs[job]) return [jobs[job]];
   return null;
 }
