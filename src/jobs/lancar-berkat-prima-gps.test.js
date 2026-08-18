@@ -24,6 +24,7 @@ test('fetches with X-API-Key and partner endpoint', async () => {
   const position = await fetchPosition({ apiKey: 'test-key', http: { get: async (...args) => { request = args; return { data: payload } } } })
   assert.equal(position.esn, '4585161')
   assert.equal(request[0], 'https://shipmanagement-iksn.com/api/partner/v1/gps/getlastposition')
+  assert.equal(request[1].params, undefined)
   assert.deepEqual(request[1].headers, { 'X-API-Key': 'test-key' })
   assert.equal(request[1].timeout, 30000)
 })
@@ -45,24 +46,4 @@ test('runOnce fetches and persists the partner position', async () => {
   const positions = await runOnce({ apiKey: 'test-key', http: { get: async () => ({ data: payload }) }, client })
   assert.deepEqual(positions.map(({ esn }) => esn), ['4585161'])
   assert.deepEqual(saved, ['4585161'])
-})
-
-test('parses multiple ESNs from environment-style values', () => {
-  assert.deepEqual(parseEsns('4585161, 4585162,,4585161'), ['4585161', '4585162', '4585161'])
-})
-
-test('runOnce fetches and persists every configured ESN with one API key', async () => {
-  const saved = []
-  const requests = []
-  const client = { device_gps: { upsert: async () => {} }, device_gpsHits: { create: async ({ data }) => { saved.push(data.ObjectID); return data } } }
-  const http = { get: async (url, options) => {
-    requests.push(options.params)
-    return { data: { data: [{ ...payload.data[0], esnid: options.params.esn }] } }
-  } }
-
-  const positions = await runOnce({ esns: ['4585161', '4585162'], apiKey: 'test-key', http, client })
-
-  assert.deepEqual(positions.map(({ esn }) => esn), ['4585161', '4585162'])
-  assert.deepEqual(saved, ['4585161', '4585162'])
-  assert.deepEqual(requests, [{ esn: '4585161' }, { esn: '4585162' }])
 })
