@@ -8,7 +8,11 @@ const API_URL = process.env.LANCAR_GPS_API_URL || 'https://shipmanagement-iksn.c
 const ESN = process.env.LANCAR_GPS_ESN || '4585161'
 const INTERVAL_MS = Number(process.env.LANCAR_GPS_INTERVAL_MS || 6 * 60 * 60 * 1000)
 
-function normalizePosition(payload) {
+function parseEsns(value = process.env.LANCAR_GPS_ESNS || ESN) {
+  return String(value).split(',').map((esn) => esn.trim()).filter(Boolean)
+}
+
+function normalizePosition(payload, fallbackEsn = ESN) {
   const item = payload && Array.isArray(payload.data) && payload.data[0]
   if (!item || item.latitude == null || item.longitude == null || !Number.isFinite(Number(item.latitude)) || !Number.isFinite(Number(item.longitude))) {
     throw new Error('Lancar GPS response tidak berisi posisi yang valid')
@@ -16,16 +20,16 @@ function normalizePosition(payload) {
   const timestamp = item.datereported
   if (!timestamp || Number.isNaN(new Date(timestamp).getTime())) throw new Error('Lancar GPS response tidak berisi waktu yang valid')
   return {
-    esn: String(item.esnid || ESN), name: item.vessel_name || null,
+    esn: String(item.esnid || fallbackEsn), name: item.vessel_name || null,
     latitude: Number(item.latitude), longitude: Number(item.longitude),
     speed: item.speed == null ? null : Number(item.speed), heading: item.direct == null ? null : Number(item.direct), timestamp,
   }
 }
 
-async function fetchPosition({ apiKey = process.env.LANCAR_GPS_API_KEY, http = axios } = {}) {
+async function fetchPosition({ esn = ESN, apiKey = process.env.LANCAR_GPS_API_KEY, http = axios } = {}) {
   if (!apiKey) throw new Error('LANCAR_GPS_API_KEY belum diisi')
-  const response = await http.get(`${API_URL}/getlastposition`, { headers: { 'X-API-Key': apiKey }, timeout: 30_000 })
-  return normalizePosition(response.data)
+  const response = await http.get(`${API_URL}/getlastposition`, { params: { esn }, headers: { 'X-API-Key': apiKey }, timeout: 30_000 })
+  return normalizePosition(response.data, esn)
 }
 
 async function savePosition(position, client = prisma) {
@@ -34,16 +38,19 @@ async function savePosition(position, client = prisma) {
   return client.device_gpsHits.create({ data: { ObjectID: position.esn, Lat: position.latitude, Lon: position.longitude, Speed: position.speed, GPSTime: gpsTime, LastDataTime: gpsTime } })
 }
 
-async function runOnce({ apiKey, http = axios, client = prisma } = {}) {
-  try {
-    const position = await fetchPosition({ apiKey, http })
-    await savePosition(position, client)
-    console.log(`[LancarGPS] ${position.esn} ${position.latitude},${position.longitude}`)
-    return [position]
-  } catch (error) {
-    console.error('[LancarGPS] gagal:', error.message)
-    return []
+async function runOnce({ esns = parseEsns(), apiKey, http = axios, client = prisma } = {}) {
+  const positions = []
+  for (const esn of esns) {
+    try {
+      const position = await fetchPosition({ esn, apiKey, http })
+      await savePosition(position, client)
+      console.log(`[LancarGPS] ${position.esn} ${position.latitude},${position.longitude}`)
+      positions.push(position)
+    } catch (error) {
+      console.error(`[LancarGPS] ${esn} gagal:`, error.message)
+    }
   }
+  return positions
 }
 
 function start(intervalMs = INTERVAL_MS) {
@@ -55,4 +62,4 @@ function start(intervalMs = INTERVAL_MS) {
 
 if (require.main === module) start()
 
-module.exports = { fetchPosition, normalizePosition, runOnce, savePosition, start }
+module.exports = { fetchPosition, normalizePosition, parseEsns, runOnce, savePosition, start }
