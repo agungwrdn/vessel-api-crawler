@@ -227,13 +227,14 @@ async function runOnce({
   return positions
 }
 
-function start(intervalMs = INTERVAL_MS) {
+function start(intervalMs = INTERVAL_MS, { monitor } = {}) {
   let running = false
   const execute = async () => {
     if (running) return
     running = true
     try {
-      await runOnce()
+      if (monitor) await monitor.run((context) => runOnce({ monitor: context }))
+      else await runOnce()
     } catch (error) {
       console.error('[VesselAPI] Tracking gagal:', error.message)
     } finally {
