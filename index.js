@@ -94,7 +94,10 @@ const contact = [
 
 ]
 
-const broadcastStokReport = async () => {
+const broadcastStokReport = async ({ http = axios, contacts = contact, monitor } = {}) => {
+  const phase = (name, callback, details) => monitor && monitor.phase
+    ? monitor.phase(name, callback, details)
+    : callback()
   let iner = 0;
   let startDate = moment()
   let endDate = moment()
@@ -141,9 +144,9 @@ const broadcastStokReport = async () => {
   }
 
   console.log(`https://dpcs.pupuk-indonesia.com/api/broadcast?startAt=${startDate}&endAt=${endDate}&secretKey=broadcastMessageStokPupukKiosPupukIndonesia`)
-	const reportResult = await axios.get(
+	const reportResult = await phase('fetch-stock-report', () => http.get(
     `https://dpcs.pupuk-indonesia.com/api/broadcast?startAt=${startDate}&endAt=${endDate}&secretKey=broadcastMessageStokPupukKiosPupukIndonesia`
-  ).then(result => {
+  )).then(result => {
     return result
   })
 
@@ -199,9 +202,9 @@ Demikian disampaikan agar bisa ditindaklanjuti, terima kasih
 
 *Pesan ini dikirimkah Melalui sistem Notifikasi otomatis Aplikasi Rekan pada tanggal ${moment().locale('id').format('DD MMMM YYYY')} Jam ${moment().locale('id').format('HH:mm')} WIB*
   `
-  await Promise.all(contact.map(async value => {
+  await Promise.all(contacts.map(async value => {
     console.log('do Sent to:', value.name)
-    await axios.post(
+    await phase(`broadcast-stock:${value.phone}`, () => http.post(
       `https://api.wassenger.com/v1/messages`, {
         phone: value.phone,
         message: whatsAppMessage
@@ -210,7 +213,7 @@ Demikian disampaikan agar bisa ditindaklanjuti, terima kasih
           'Token': 'f28c0f7e2079889e088e25127fc52548e22100ba5cf3726ac338d4e90a90ecf68742426266f8f38f'
         }
       }
-    ).then(result => {
+    )).then(result => {
       console.log('Finish sent to:', value.name)
     });
   }))

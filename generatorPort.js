@@ -592,44 +592,47 @@ async function GetDataPKT() {
   });
 }
 
-async function main() {
-  await connectRedis()
+async function main({ monitor, redis, sources = {} } = {}) {
+  const phase = (name, callback, details) => monitor && monitor.phase
+    ? monitor.phase(name, callback, details)
+    : callback()
+  const redisClient = await phase('redis-connect', async () => redis || connectRedis())
   try {
-    await client.DEL("port_vessel_v2")
+    await phase('redis-clear', () => redisClient.DEL("port_vessel_v2"))
   } catch (error) {
     console.log(error)
   }
   try {
-    await GetDataPIM(); 
+    await phase('fetch-port-pim', sources.PIM || GetDataPIM)
   } catch (error) {
     
   }
 
   try {
-    await GetDataPKG();
+    await phase('fetch-port-pkg-loading', sources.PKG || GetDataPKG)
   } catch (error) {
     console.log(error)
   }
 
   try {
-    await GetDataPKGDischarging();
+    await phase('fetch-port-pkg-discharging', sources.PKGDischarging || GetDataPKGDischarging)
   } catch (error) {
     console.log(error)
   }
 
   try {
-    await GetDataPKT();
+    await phase('fetch-port-pkt', sources.PKT || GetDataPKT)
   } catch (error) {
     
   }
 
   try {
-    await GetDataPSP();
+    await phase('fetch-port-psp', sources.PSP || GetDataPSP)
   } catch (error) {
     
   }
 
-  await client.set('port_vessel_v2', JSON.stringify(ports));
+  await phase('redis-write', () => redisClient.set('port_vessel_v2', JSON.stringify(ports)));
   ports = [
     {
       //dermaga petro
