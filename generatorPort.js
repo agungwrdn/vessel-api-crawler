@@ -793,11 +793,12 @@ async function main({ monitor, redis, sources = {} } = {}) {
   console.log("DONE")
 }
 
-function start(intervalMs = 1 * 60 * 60 * 1000) {
-  main()
+function start(intervalMs = 1 * 60 * 60 * 1000, { monitor } = {}) {
+  const execute = () => monitor ? monitor.run((context) => main({ monitor: context })) : main()
+  execute()
   return setInterval(function () {
     console.log('Generating port data...')
-    main()
+    execute()
   }, intervalMs)
 }
 

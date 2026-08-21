@@ -49,9 +49,9 @@ async function runOnce({ apiKey, http = axios, client = prisma, monitor } = {}) 
   }
 }
 
-function start(intervalMs = INTERVAL_MS) {
+function start(intervalMs = INTERVAL_MS, { monitor } = {}) {
   let running = false
-  const execute = async () => { if (running) return; running = true; try { await runOnce() } finally { running = false } }
+  const execute = async () => { if (running) return; running = true; try { if (monitor) await monitor.run((context) => runOnce({ monitor: context })); else await runOnce() } finally { running = false } }
   execute()
   return setInterval(execute, intervalMs)
 }

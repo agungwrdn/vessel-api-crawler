@@ -1,4 +1,6 @@
 const jobs = require('./jobs');
+const { createMonitorStore } = require('./monitor/store')
+const { createMonitor } = require('./monitor')
 
 const usage = `Usage: node src/app.js <job>
 
@@ -7,6 +9,7 @@ Jobs:
   lancar    Collect KM. Lancar Berkat Prima last GPS position
   stock     Broadcast stock report
   ports     Generate port data
+  monitor   Start the local job monitoring dashboard
   all       Start all jobs (default)
 `;
 
@@ -24,7 +27,16 @@ function main(argument = process.argv[2]) {
     return 1;
   }
 
-  selectedJobs.forEach((job) => job());
+  if (argument === 'monitor') {
+    selectedJobs.forEach((job) => job())
+    return 0
+  }
+
+  const monitorStore = process.env.MONITOR_DISABLED === 'true' ? null : createMonitorStore()
+  selectedJobs.forEach((job) => {
+    const monitor = monitorStore && job.jobName ? createMonitor(job.jobName, monitorStore) : undefined
+    job(monitor)
+  });
   return 0;
 }
 

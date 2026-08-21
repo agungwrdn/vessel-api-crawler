@@ -1,1 +1,1 @@
-module.exports = () => require('../../generatorPort').start();
+module.exports = (monitor) => require('../../generatorPort').start(undefined, { monitor });

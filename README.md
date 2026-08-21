@@ -29,6 +29,18 @@ node src/app.js stock
 node src/app.js ports
 ```
 
+## Monitoring generator
+
+Jalankan dashboard monitoring lokal dengan:
+
+```bash
+npm run monitor
+```
+
+Buka `http://localhost:3000`. Dashboard menampilkan status dan histori fase untuk tracking kapal, Lancar GPS, broadcast stok, dan generator port, termasuk durasi serta pesan error. Data disimpan di `data/monitor.sqlite` dan histori lebih dari 30 hari dibersihkan otomatis.
+
+Konfigurasi opsional: `MONITOR_HOST`, `MONITOR_PORT`, `MONITOR_DB_PATH`. Untuk menjalankan job tanpa pencatatan monitoring, gunakan `MONITOR_DISABLED=true`.
+
 Salin `.env.example` menjadi `.env` dan isi konfigurasi sebelum menjalankan job yang memanggil API eksternal. File legacy tetap dipertahankan untuk kompatibilitas sementara.
 
 ## VesselAPI tracking
