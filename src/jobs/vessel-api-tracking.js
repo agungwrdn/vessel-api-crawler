@@ -49,6 +49,69 @@ async function fetchPosition({ mmsi = MMSI, apiKey = process.env.VESSELAPI_API_K
   return normalizePosition(response.data)
 }
 
+function normalizeVesselInformation(payload, fallbackMmsi) {
+  const vessel = payload && payload.vessel
+  if (!vessel || !vessel.name) {
+    throw new Error('VesselAPI response tidak berisi informasi kapal yang valid')
+  }
+
+  return {
+    mmsi: String(vessel.mmsi || fallbackMmsi),
+    name: vessel.name,
+  }
+}
+
+async function fetchVesselInformation({
+  mmsi,
+  apiKey = process.env.VESSELAPI_API_KEY,
+  http = axios,
+} = {}) {
+  if (!mmsi) throw new Error('MMSI belum diisi')
+  if (!apiKey) throw new Error('VESSELAPI_API_KEY belum diisi')
+
+  const response = await http.get(`${API_URL}/vessel/${encodeURIComponent(mmsi)}`, {
+    params: { 'filter.idType': 'mmsi' },
+    headers: { Authorization: `Bearer ${apiKey}` },
+    timeout: 30_000,
+  })
+
+  return normalizeVesselInformation(response.data, mmsi)
+}
+
+async function syncMissingVesselInformation({
+  mmsis = parseMmsis(),
+  apiKey = process.env.VESSELAPI_API_KEY,
+  http = axios,
+  client = prisma,
+} = {}) {
+  const configuredMmsis = [...new Set(mmsis.map((mmsi) => String(mmsi).trim()).filter(Boolean))]
+  if (!configuredMmsis.length) return { missing: [], synced: [] }
+
+  const existing = await client.device_gps.findMany({
+    where: { id: { in: configuredMmsis } },
+    select: { id: true },
+  })
+  const existingIds = new Set(existing.map(({ id }) => String(id)))
+  const missing = configuredMmsis.filter((mmsi) => !existingIds.has(mmsi))
+  const synced = []
+
+  for (const mmsi of missing) {
+    try {
+      const vessel = await fetchVesselInformation({ mmsi, apiKey, http })
+      await client.device_gps.upsert({
+        where: { id: mmsi },
+        update: { keterangan: vessel.name },
+        create: { id: mmsi, keterangan: vessel.name },
+      })
+      synced.push(vessel)
+    } catch (error) {
+      console.error(`[VesselAPI] informasi ${mmsi} gagal:`, error.message)
+    }
+  }
+
+  return { missing, synced }
+}
+
 function normalizeTelkomsatPosition(item) {
   if (!item || item.lat == null || item.lon == null) {
     throw new Error('Telkomsat response tidak berisi posisi yang valid')
@@ -93,7 +156,7 @@ async function savePosition(position, client = prisma, source = 'VesselAPI') {
 
   await client.device_gps.upsert({
     where: { id: position.mmsi },
-    update: { keterangan: source, nama_kapal: position.name },
+    update: { nama_kapal: position.name },
     create: {
       id: position.mmsi,
       keterangan: source,
@@ -115,12 +178,23 @@ async function savePosition(position, client = prisma, source = 'VesselAPI') {
 
 async function runOnce({
   mmsis = parseMmsis(),
-  apiKey,
+  apiKey = process.env.VESSELAPI_API_KEY,
   telkomsatApiKey = process.env.TELKOMSAT_API_KEY,
   http = axios,
   client = prisma,
 } = {}) {
   const positions = []
+
+  if (mmsis.length && client.device_gps.findMany) {
+    try {
+      const result = await syncMissingVesselInformation({ mmsis, apiKey, http, client })
+      if (result.missing.length) {
+        console.log(`[VesselAPI] MMSI belum ada di database: ${result.missing.join(', ')}`)
+      }
+    } catch (error) {
+      console.error('[VesselAPI] pengecekan informasi kapal gagal:', error.message)
+    }
+  }
 
   for (const mmsi of mmsis) {
     try {
@@ -171,11 +245,14 @@ if (require.main === module) start()
 
 module.exports = {
   fetchPosition,
+  fetchVesselInformation,
   fetchTelkomsatPositions,
   normalizePosition,
+  normalizeVesselInformation,
   normalizeTelkomsatPosition,
   parseMmsis,
   runOnce,
   savePosition,
   start,
+  syncMissingVesselInformation,
 }

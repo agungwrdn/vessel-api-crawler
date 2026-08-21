@@ -37,6 +37,8 @@ Job tracking berjalan setiap 6 jam. Job ini mengambil posisi MMSI dari VesselAPI
 
 Isi `VESSELAPI_API_KEY` dan/atau `TELKOMSAT_API_KEY` di `.env`; interval dan MMSI VesselAPI dapat diubah melalui environment variable.
 
+Pada setiap eksekusi, MMSI dari `VESSELAPI_MMSI` dibandingkan dengan `device_gps.id`. MMSI yang belum ada akan diambil informasinya dari endpoint VesselAPI `/v1/vessel/{mmsi}` dan nama kapal disimpan sebagai nilai polos di `device_gps.keterangan`.
+
 ## KM. Lancar Berkat Prima GPS
 
 Job `lancar` mengambil posisi terakhir KM. Lancar Berkat Prima dari partner GPS API setiap 6 jam dan menyimpannya ke tabel GPS yang sama. Isi `LANCAR_GPS_API_KEY` di `.env`; URL, ESN, dan interval dapat dioverride melalui environment variable.

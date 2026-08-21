@@ -4,6 +4,9 @@ const assert = require('node:assert/strict')
 const {
   normalizePosition,
   normalizeTelkomsatPosition,
+  normalizeVesselInformation,
+  fetchVesselInformation,
+  syncMissingVesselInformation,
   fetchTelkomsatPositions,
   savePosition,
   parseMmsis,
@@ -21,6 +24,14 @@ const telkomsatPayload = {
     sog: '21.86',
     timestamp: 1787275392,
   }],
+}
+
+const vesselInformationPayload = {
+  vessel: {
+    mmsi: 525901923,
+    name: 'KM TEST VESSEL',
+    vessel_type: 'Cargo Ship',
+  },
 }
 
 test('parses a comma-separated MMSI configuration', () => {
@@ -51,6 +62,57 @@ test('normalizes VesselAPI position response for the GPS schema', () => {
     speed: 8.5,
     timestamp: '2026-08-10T00:00:00Z',
   })
+})
+
+test('normalizes VesselAPI vessel information response', () => {
+  assert.deepEqual(normalizeVesselInformation(vesselInformationPayload, '525901923'), {
+    mmsi: '525901923',
+    name: 'KM TEST VESSEL',
+  })
+})
+
+test('fetches vessel information by MMSI', async () => {
+  let request
+  const vessel = await fetchVesselInformation({
+    mmsi: '525901923',
+    apiKey: 'test-key',
+    http: {
+      get: async (...args) => {
+        request = args
+        return { data: vesselInformationPayload }
+      },
+    },
+  })
+
+  assert.equal(request[0], 'https://api.vesselapi.com/v1/vessel/525901923')
+  assert.deepEqual(request[1].params, { 'filter.idType': 'mmsi' })
+  assert.deepEqual(request[1].headers, { Authorization: 'Bearer test-key' })
+  assert.equal(vessel.name, 'KM TEST VESSEL')
+})
+
+test('syncs information only for MMSIs missing from the database', async () => {
+  const upserts = []
+  const client = {
+    device_gps: {
+      findMany: async () => [{ id: '525901923' }],
+      upsert: async (args) => upserts.push(args),
+    },
+  }
+  const result = await syncMissingVesselInformation({
+    mmsis: ['525901923', '525006415'],
+    apiKey: 'test-key',
+    http: {
+      get: async () => ({ data: { vessel: { mmsi: '525006415', name: 'KM MISSING VESSEL' } } }),
+    },
+    client,
+  })
+
+  assert.deepEqual(result.missing, ['525006415'])
+  assert.deepEqual(upserts, [{
+    where: { id: '525006415' },
+    update: { keterangan: 'KM MISSING VESSEL' },
+    create: { id: '525006415', keterangan: 'KM MISSING VESSEL' },
+  }])
 })
 
 test('normalizes Telkomsat my_vessel response for the GPS schema', () => {
@@ -112,7 +174,7 @@ test('saves the current vessel and GPS history using the GPS timestamp', async (
   assert.deepEqual(calls, [
     ['upsert', {
       where: { id: '525901342' },
-      update: { keterangan: 'VesselAPI', nama_kapal: 'TEST VESSEL' },
+      update: { nama_kapal: 'TEST VESSEL' },
       create: {
         id: '525901342',
         keterangan: 'VesselAPI',
@@ -174,7 +236,7 @@ test('fetches and saves every configured vessel', async () => {
 test('runOnce fetches and persists Telkomsat vessels', async () => {
   const saved = []
   const client = {
-    device_gps: { upsert: async () => {} },
+    device_gps: { findMany: async () => [], upsert: async () => {} },
     device_gpsHits: {
       create: async ({ data }) => {
         saved.push(data.ObjectID)
