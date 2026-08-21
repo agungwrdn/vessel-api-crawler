@@ -5,12 +5,14 @@ try {
 }
 
 const axios = require('axios')
+const FormData = require('form-data')
 const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 const API_URL = process.env.VESSELAPI_URL || 'https://api.vesselapi.com/v1'
 const MMSI = process.env.VESSELAPI_MMSI || '525901342'
-const INTERVAL_MS = 3 * 60 * 60 * 1000
+const TELKOMSAT_API_URL = process.env.TELKOMSAT_API_URL || 'https://vis.telkomsat.co.id/api/my_vessel'
+const INTERVAL_MS = 6 * 60 * 60 * 1000
 
 function parseMmsis(value = MMSI) {
   return String(value)
@@ -47,15 +49,54 @@ async function fetchPosition({ mmsi = MMSI, apiKey = process.env.VESSELAPI_API_K
   return normalizePosition(response.data)
 }
 
-async function savePosition(position, client = prisma) {
+function normalizeTelkomsatPosition(item) {
+  if (!item || item.lat == null || item.lon == null) {
+    throw new Error('Telkomsat response tidak berisi posisi yang valid')
+  }
+
+  const latitude = Number(item.lat)
+  const longitude = Number(item.lon)
+  const timestamp = Number(item.timestamp)
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || !Number.isFinite(timestamp)) {
+    throw new Error('Telkomsat response tidak berisi posisi atau waktu yang valid')
+  }
+
+  return {
+    mmsi: String(item.mmsi),
+    name: item.name || item.ais_name || null,
+    latitude,
+    longitude,
+    speed: item.sog == null ? null : Number(item.sog),
+    timestamp: new Date(timestamp * 1000).toISOString(),
+  }
+}
+
+async function fetchTelkomsatPositions({
+  apiKey = process.env.TELKOMSAT_API_KEY,
+  http = axios,
+} = {}) {
+  if (!apiKey) throw new Error('TELKOMSAT_API_KEY belum diisi')
+
+  const form = new FormData()
+  form.append('key', apiKey)
+  const response = await http.post(TELKOMSAT_API_URL, form, {
+    headers: form.getHeaders(),
+    timeout: 30_000,
+  })
+  const data = response.data && response.data.data
+  if (!Array.isArray(data)) throw new Error('Telkomsat response tidak berisi daftar kapal')
+  return data.map(normalizeTelkomsatPosition)
+}
+
+async function savePosition(position, client = prisma, source = 'VesselAPI') {
   const gpsTime = new Date(position.timestamp)
 
   await client.device_gps.upsert({
     where: { id: position.mmsi },
-    update: { keterangan: 'VesselAPI', nama_kapal: position.name },
+    update: { keterangan: source, nama_kapal: position.name },
     create: {
       id: position.mmsi,
-      keterangan: 'VesselAPI',
+      keterangan: source,
       nama_kapal: position.name,
     },
   })
@@ -72,7 +113,13 @@ async function savePosition(position, client = prisma) {
   })
 }
 
-async function runOnce({ mmsis = parseMmsis(), apiKey, http = axios, client = prisma } = {}) {
+async function runOnce({
+  mmsis = parseMmsis(),
+  apiKey,
+  telkomsatApiKey = process.env.TELKOMSAT_API_KEY,
+  http = axios,
+  client = prisma,
+} = {}) {
   const positions = []
 
   for (const mmsi of mmsis) {
@@ -83,6 +130,19 @@ async function runOnce({ mmsis = parseMmsis(), apiKey, http = axios, client = pr
       positions.push(position)
     } catch (error) {
       console.error(`[VesselAPI] ${mmsi} gagal:`, error.message)
+    }
+  }
+
+  if (telkomsatApiKey) {
+    try {
+      const telkomsatPositions = await fetchTelkomsatPositions({ apiKey: telkomsatApiKey, http })
+      for (const position of telkomsatPositions) {
+        await savePosition(position, client, 'Telkomsat my_vessel')
+        console.log(`[Telkomsat] ${position.mmsi} ${position.latitude},${position.longitude}`)
+        positions.push(position)
+      }
+    } catch (error) {
+      console.error('[Telkomsat] gagal:', error.message)
     }
   }
 
@@ -109,4 +169,13 @@ function start(intervalMs = INTERVAL_MS) {
 
 if (require.main === module) start()
 
-module.exports = { fetchPosition, normalizePosition, parseMmsis, runOnce, savePosition, start }
+module.exports = {
+  fetchPosition,
+  fetchTelkomsatPositions,
+  normalizePosition,
+  normalizeTelkomsatPosition,
+  parseMmsis,
+  runOnce,
+  savePosition,
+  start,
+}

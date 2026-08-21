@@ -33,7 +33,9 @@ Salin `.env.example` menjadi `.env` dan isi konfigurasi sebelum menjalankan job 
 
 ## VesselAPI tracking
 
-Job tracking menggunakan endpoint posisi VesselAPI dan hanya mengambil MMSI `525901342` setiap 6 jam. Isi `VESSELAPI_API_KEY` di `.env`; interval dan MMSI dapat diubah melalui environment variable.
+Job tracking berjalan setiap 6 jam. Job ini mengambil posisi MMSI dari VesselAPI dan, bila `TELKOMSAT_API_KEY` diisi, mengambil seluruh kapal dari endpoint Telkomsat `my_vessel`. Data Telkomsat dikirim sebagai multipart form dengan field `key`, lalu disimpan ke tabel GPS yang sama. URL Telkomsat dapat diubah melalui `TELKOMSAT_API_URL`.
+
+Isi `VESSELAPI_API_KEY` dan/atau `TELKOMSAT_API_KEY` di `.env`; interval dan MMSI VesselAPI dapat diubah melalui environment variable.
 
 ## KM. Lancar Berkat Prima GPS
 

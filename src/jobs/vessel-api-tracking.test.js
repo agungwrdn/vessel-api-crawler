@@ -1,7 +1,27 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
 
-const { normalizePosition, savePosition, parseMmsis, runOnce } = require('./vessel-api-tracking')
+const {
+  normalizePosition,
+  normalizeTelkomsatPosition,
+  fetchTelkomsatPositions,
+  savePosition,
+  parseMmsis,
+  runOnce,
+} = require('./vessel-api-tracking')
+
+const telkomsatPayload = {
+  code: 200,
+  message: 'OK',
+  data: [{
+    mmsi: '525018003',
+    name: 'KM SOEMANTRI BRODJONEGORO',
+    lat: '-6.9078460',
+    lon: '110.3856890',
+    sog: '21.86',
+    timestamp: 1787275392,
+  }],
+}
 
 test('parses a comma-separated MMSI configuration', () => {
   assert.deepEqual(parseMmsis('525901923, 525006415,,525301532'), [
@@ -31,6 +51,36 @@ test('normalizes VesselAPI position response for the GPS schema', () => {
     speed: 8.5,
     timestamp: '2026-08-10T00:00:00Z',
   })
+})
+
+test('normalizes Telkomsat my_vessel response for the GPS schema', () => {
+  assert.deepEqual(normalizeTelkomsatPosition(telkomsatPayload.data[0]), {
+    mmsi: '525018003',
+    name: 'KM SOEMANTRI BRODJONEGORO',
+    latitude: -6.907846,
+    longitude: 110.385689,
+    speed: 21.86,
+    timestamp: '2026-08-21T01:23:12.000Z',
+  })
+})
+
+test('posts the Telkomsat key as multipart form data', async () => {
+  let request
+  const positions = await fetchTelkomsatPositions({
+    apiKey: 'test-key',
+    http: {
+      post: async (...args) => {
+        request = args
+        return { data: telkomsatPayload }
+      },
+    },
+  })
+
+  assert.equal(request[0], 'https://vis.telkomsat.co.id/api/my_vessel')
+  assert.match(request[1].getBuffer().toString(), /name="key"\r?\n\r?\ntest-key/)
+  assert.match(request[2].headers['content-type'], /multipart\/form-data/)
+  assert.equal(request[2].timeout, 30000)
+  assert.deepEqual(positions.map(({ mmsi }) => mmsi), ['525018003'])
 })
 
 test('saves the current vessel and GPS history using the GPS timestamp', async () => {
@@ -119,4 +169,28 @@ test('fetches and saves every configured vessel', async () => {
     '525006415',
   ])
   assert.deepEqual(saved, ['525901923', '525006415'])
+})
+
+test('runOnce fetches and persists Telkomsat vessels', async () => {
+  const saved = []
+  const client = {
+    device_gps: { upsert: async () => {} },
+    device_gpsHits: {
+      create: async ({ data }) => {
+        saved.push(data.ObjectID)
+        return data
+      },
+    },
+  }
+  const positions = await runOnce({
+    mmsis: [],
+    telkomsatApiKey: 'test-key',
+    http: {
+      post: async () => ({ data: telkomsatPayload }),
+    },
+    client,
+  })
+
+  assert.deepEqual(positions.map(({ mmsi }) => mmsi), ['525018003'])
+  assert.deepEqual(saved, ['525018003'])
 })
