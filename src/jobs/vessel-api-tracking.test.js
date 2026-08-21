@@ -256,3 +256,36 @@ test('runOnce fetches and persists Telkomsat vessels', async () => {
   assert.deepEqual(positions.map(({ mmsi }) => mmsi), ['525018003'])
   assert.deepEqual(saved, ['525018003'])
 })
+
+test('emits monitoring phases for VesselAPI tracking', async () => {
+  const phases = []
+  const monitor = {
+    phase: async (name, callback) => {
+      phases.push(`${name}:running`)
+      try {
+        const result = await callback()
+        phases.push(`${name}:success`)
+        return result
+      } catch (error) {
+        phases.push(`${name}:error:${error.message}`)
+        throw error
+      }
+    },
+  }
+  const client = {
+    device_gps: { findMany: async () => [{ id: '525901923' }], upsert: async () => {} },
+    device_gpsHits: { create: async ({ data }) => data },
+  }
+
+  await runOnce({
+    mmsis: ['525901923'],
+    apiKey: 'test-key',
+    http: { get: async () => ({ data: { vesselPosition: { mmsi: '525901923', latitude: -6.2, longitude: 106.8, timestamp: '2026-08-10T00:00:00Z' } } }) },
+    client,
+    monitor,
+  })
+
+  assert.ok(phases.includes('database-check:success'))
+  assert.ok(phases.includes('fetch-position:525901923:success'))
+  assert.ok(phases.includes('save-position:525901923:success'))
+})

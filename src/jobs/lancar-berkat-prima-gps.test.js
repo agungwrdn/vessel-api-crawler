@@ -47,3 +47,30 @@ test('runOnce fetches and persists the partner position', async () => {
   assert.deepEqual(positions.map(({ esn }) => esn), ['4585161'])
   assert.deepEqual(saved, ['4585161'])
 })
+
+test('emits monitoring phases for partner GPS tracking', async () => {
+  const phases = []
+  const monitor = {
+    phase: async (name, callback) => {
+      phases.push(`${name}:running`)
+      const result = await callback()
+      phases.push(`${name}:success`)
+      return result
+    },
+  }
+  const client = { device_gps: { upsert: async () => {} }, device_gpsHits: { create: async ({ data }) => data } }
+
+  await runOnce({
+    apiKey: 'test-key',
+    http: { get: async () => ({ data: payload }) },
+    client,
+    monitor,
+  })
+
+  assert.deepEqual(phases, [
+    'fetch-partner-position:running',
+    'fetch-partner-position:success',
+    'save-position:running',
+    'save-position:success',
+  ])
+})

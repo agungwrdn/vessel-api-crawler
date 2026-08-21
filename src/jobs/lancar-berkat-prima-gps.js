@@ -34,10 +34,13 @@ async function savePosition(position, client = prisma) {
   return client.device_gpsHits.create({ data: { ObjectID: position.esn, Lat: position.latitude, Lon: position.longitude, Speed: position.speed, GPSTime: gpsTime, LastDataTime: gpsTime } })
 }
 
-async function runOnce({ apiKey, http = axios, client = prisma } = {}) {
+async function runOnce({ apiKey, http = axios, client = prisma, monitor } = {}) {
+  const phase = (name, callback, details) => monitor && monitor.phase
+    ? monitor.phase(name, callback, details)
+    : callback()
   try {
-    const position = await fetchPosition({ apiKey, http })
-    await savePosition(position, client)
+    const position = await phase('fetch-partner-position', () => fetchPosition({ apiKey, http }))
+    await phase('save-position', () => savePosition(position, client), { esn: position.esn })
     console.log(`[LancarGPS] ${position.esn} ${position.latitude},${position.longitude}`)
     return [position]
   } catch (error) {

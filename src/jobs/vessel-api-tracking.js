@@ -182,12 +182,16 @@ async function runOnce({
   telkomsatApiKey = process.env.TELKOMSAT_API_KEY,
   http = axios,
   client = prisma,
+  monitor,
 } = {}) {
   const positions = []
+  const phase = (name, callback, details) => monitor && monitor.phase
+    ? monitor.phase(name, callback, details)
+    : callback()
 
   if (mmsis.length && client.device_gps.findMany) {
     try {
-      const result = await syncMissingVesselInformation({ mmsis, apiKey, http, client })
+      const result = await phase('database-check', () => syncMissingVesselInformation({ mmsis, apiKey, http, client }), { count: mmsis.length })
       if (result.missing.length) {
         console.log(`[VesselAPI] MMSI belum ada di database: ${result.missing.join(', ')}`)
       }
@@ -198,8 +202,8 @@ async function runOnce({
 
   for (const mmsi of mmsis) {
     try {
-      const position = await fetchPosition({ mmsi, apiKey, http })
-      await savePosition(position, client)
+      const position = await phase(`fetch-position:${mmsi}`, () => fetchPosition({ mmsi, apiKey, http }), { mmsi })
+      await phase(`save-position:${mmsi}`, () => savePosition(position, client), { mmsi })
       console.log(`[VesselAPI] ${position.mmsi} ${position.latitude},${position.longitude}`)
       positions.push(position)
     } catch (error) {
@@ -209,9 +213,9 @@ async function runOnce({
 
   if (telkomsatApiKey) {
     try {
-      const telkomsatPositions = await fetchTelkomsatPositions({ apiKey: telkomsatApiKey, http })
+      const telkomsatPositions = await phase('fetch-telkomsat', () => fetchTelkomsatPositions({ apiKey: telkomsatApiKey, http }))
       for (const position of telkomsatPositions) {
-        await savePosition(position, client, 'Telkomsat my_vessel')
+        await phase(`save-telkomsat:${position.mmsi}`, () => savePosition(position, client, 'Telkomsat my_vessel'), { mmsi: position.mmsi })
         console.log(`[Telkomsat] ${position.mmsi} ${position.latitude},${position.longitude}`)
         positions.push(position)
       }
