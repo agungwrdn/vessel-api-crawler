@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Monitoring</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, sans-serif;
+      background: #101722;
+      color: #e8eef7;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px;
+      max-width: 1280px;
+      margin-inline: auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+    }
+
+    .muted {
+      color: #98a6b8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .card,
+    section {
+      background: #182333;
+      border: 1px solid #2b3b50;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .status {
+      display: inline-block;
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .success {
+      background: #174f3b;
+      color: #8ef0c1;
+    }
+
+    .error {
+      background: #5c2530;
+      color: #ffabb7;
+    }
+
+    .running {
+      background: #604719;
+      color: #ffd890;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid #2b3b50;
+      vertical-align: top;
+    }
+
+    code {
+      color: #a9d5ff;
+    }
+
+    .error-text {
+      color: #ffabb7;
+    }
+
+    .phase {
+      margin: 4px 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 16px;
+      }
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Job Monitoring</h1>
+  <div class="muted">Status seluruh generator dan fase terakhirnya · refresh setiap 10 detik</div>
+  <div id="jobs" class="grid">
+    <div class="card">Memuat status...</div>
+  </div>
+  <section>
+    <h2>Histori Eksekusi</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Job</th>
+          <th>Status</th>
+          <th>Mulai</th>
+          <th>Durasi</th>
+          <th>Pesan / Error</th>
+        </tr>
+      </thead>
+      <tbody id="runs">
+        <tr>
+          <td colspan="5">Memuat histori...</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <script>
+    const formatDate = value => value ? new Date(value).toLocaleString('id-ID') : '-';
+    const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+    async function refresh() {
+      try {
+        const [jobs, runs] = await Promise.all([fetch('/api/jobs').then(r => r.json()), fetch('/api/runs?limit=100').then(r => r.json())]);
+        document.querySelector('#jobs').innerHTML = jobs.length ? jobs.map(job => `
+          <article class="card"><h3>${escapeHtml(job.job_name)}</h3><span class="status ${escapeHtml(job.status)}">${escapeHtml(job.status)}</span>
+          <p class="muted">Mulai: ${formatDate(job.started_at)}<br>Durasi: ${job.duration_ms ?? '-'} ms</p>
+          <div class="${job.error_message ? 'error-text' : ''}">${escapeHtml(job.error_message || job.message || 'Tidak ada pesan')}</div></article>`).join('') : '<div class="card">Belum ada eksekusi.</div>';
+        document.querySelector('#runs').innerHTML = runs.map(run => `<tr>
+          <td><code>${escapeHtml(run.job_name)}</code><div>${run.phases.map(phase => `<div class="phase"><span class="status ${escapeHtml(phase.status)}">${escapeHtml(phase.status)}</span> ${escapeHtml(phase.phase_name)}</div>`).join('')}</div></td>
+          <td><span class="status ${escapeHtml(run.status)}">${escapeHtml(run.status)}</span></td><td>${formatDate(run.started_at)}</td><td>${run.duration_ms ?? '-'} ms</td>
+          <td class="${run.error_message ? 'error-text' : ''}">${escapeHtml(run.error_message || run.message || '-')}</td></tr>`).join('') || '<tr><td colspan="5">Belum ada histori.</td></tr>';
+      } catch (error) { document.querySelector('#jobs').innerHTML = `<div class="card error-text">Monitor error: ${escapeHtml(error.message)}</div>`; }
+    }
+    refresh(); setInterval(refresh, 10000);
+  </script>
+</body>
+
+</html>

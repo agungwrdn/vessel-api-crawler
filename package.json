@@ -46,6 +46,7 @@
     "start:lancar": "node src/app.js lancar",
     "start:stock": "node src/app.js stock",
     "start:ports": "node src/app.js ports",
+    "monitor": "node src/monitor/server.js",
     "build": "node build.js",
     "build:ports": "node build-port.js",
     "test": "node --test"
