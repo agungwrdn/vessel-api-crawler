@@ -43,7 +43,7 @@ async function fetchPosition({ mmsi = MMSI, apiKey = process.env.VESSELAPI_API_K
   const response = await http.get(`${API_URL}/vessel/${mmsi}/position`, {
     params: { 'filter.idType': 'mmsi' },
     headers: { Authorization: `Bearer ${apiKey}` },
-    timeout: 30_000,
+    timeout: 30000,
   })
 
   return normalizePosition(response.data)
@@ -172,6 +172,8 @@ async function savePosition(position, client = prisma, source = 'VesselAPI') {
       Speed: position.speed,
       GPSTime: gpsTime,
       LastDataTime: gpsTime,
+      Source: source,
+      SourceRefId: position.sourceRefId || null,
     },
   })
 }

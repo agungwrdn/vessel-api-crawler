@@ -38,6 +38,7 @@ test('saves partner position to current and history GPS tables', async () => {
   assert.equal(calls[0][1].update.keterangan, 'Lancar Berkat Prima GPS API')
   assert.equal(calls[1][1].data.ObjectID, '4585161')
   assert.equal(calls[1][1].data.GPSTime.toISOString(), '2026-08-11T17:00:00.000Z')
+  assert.equal(calls[1][1].data.Source, 'Lancar Berkat Prima GPS API')
 })
 
 test('runOnce fetches and persists the partner position', async () => {

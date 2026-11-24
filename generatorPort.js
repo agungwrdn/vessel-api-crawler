@@ -1,7 +1,15 @@
+try {
+  require('dotenv').config()
+} catch {
+  // Environment variables can also be provided directly by the process manager.
+}
+
 const axios = require("axios");
 const _ = require("lodash");
 const { createClient } = require("redis");
 let client;
+
+const FORCE_API_URL = process.env.PI_PORT_FORCE_API_URL || 'https://pi-port.pupuk-indonesia.com/pi/external/force-api'
 
 async function connectRedis() {
   if (client) return client
@@ -592,6 +600,54 @@ async function GetDataPKT() {
   });
 }
 
+// Memicu refresh cache t_cache_api (endpoint eksternal Jetvis PI) untuk seluruh
+// company terdaftar. Lihat docs/api/external-force-api.md di repo jetvis-pi.
+async function triggerForceApi({
+  url = FORCE_API_URL,
+  apiKey = process.env.PI_PORT_FORCE_API_KEY,
+  http = axios,
+} = {}) {
+  if (!apiKey) throw new Error('PI_PORT_FORCE_API_KEY belum diisi')
+
+  // Body harus benar-benar kosong (bukan '{}') - endpoint hanya butuh header
+  // Content-Type: application/json untuk lolos body-parser, body itu sendiri diabaikan.
+  const response = await http.post(url, '', {
+    headers: { 'X-API-Key': apiKey, 'Content-Type': 'application/json' },
+    timeout: 30_000,
+  })
+
+  const companies = (response.data && response.data.companies) || []
+  const successCount = companies.filter((company) => company.status === 'success').length
+  const failedCompanies = companies.filter((company) => company.status === 'error')
+  const skippedCount = companies.filter((company) => company.status === 'skipped').length
+
+  console.log(`[ForceAPI] berhasil dipanggil (HTTP ${response.status}): ${successCount} sukses, ${failedCompanies.length} gagal, ${skippedCount} skip dari ${companies.length} company`)
+  if (failedCompanies.length) {
+    console.error(`[ForceAPI] company gagal di-refresh: ${failedCompanies.map((company) => company.name).join(', ')}`)
+  }
+
+  return companies
+}
+
+function logForceApiError(error) {
+  const status = error.response && error.response.status
+  const body = error.response && error.response.data
+  const serverMessage = (body && body.error) || (typeof body === 'string' ? body : undefined)
+
+  if (status === 401) {
+    console.error(`[ForceAPI] gagal (401): API key tidak valid atau tidak dikirim${serverMessage ? ` - ${serverMessage}` : ''}`)
+  } else if (status === 429) {
+    console.error(`[ForceAPI] gagal (429): masih cooldown - ${serverMessage || error.message}`)
+  } else if (status === 503) {
+    console.error(`[ForceAPI] gagal (503): EXTERNAL_API_KEY_HASH belum dikonfigurasi di server${serverMessage ? ` - ${serverMessage}` : ''}`)
+  } else if (status) {
+    // Status di luar kontrak yang didokumentasikan (401/405/429/503) - tampilkan body mentah untuk diagnosis.
+    console.error(`[ForceAPI] gagal (${status}): ${serverMessage || JSON.stringify(body) || error.message}`)
+  } else {
+    console.error('[ForceAPI] gagal:', error.message)
+  }
+}
+
 async function main({ monitor, redis, sources = {} } = {}) {
   const phase = (name, callback, details) => monitor && monitor.phase
     ? monitor.phase(name, callback, details)
@@ -602,10 +658,17 @@ async function main({ monitor, redis, sources = {} } = {}) {
   } catch (error) {
     console.log(error)
   }
+
+  try {
+    await phase('force-api-refresh', sources.ForceApi || triggerForceApi)
+  } catch (error) {
+    logForceApiError(error)
+  }
+
   try {
     await phase('fetch-port-pim', sources.PIM || GetDataPIM)
   } catch (error) {
-    
+
   }
 
   try {
@@ -632,7 +695,7 @@ async function main({ monitor, redis, sources = {} } = {}) {
     
   }
 
-  await phase('redis-write', () => redisClient.set('port_vessel_v2', JSON.stringify(ports)));
+  await phase('redis-write', () => redisClient.set('port_vessel_v2', JSON.stringify({ updatedAt: new Date().toISOString(), ports })));
   ports = [
     {
       //dermaga petro
@@ -793,7 +856,7 @@ async function main({ monitor, redis, sources = {} } = {}) {
   console.log("DONE")
 }
 
-function start(intervalMs = 1 * 60 * 60 * 1000, { monitor } = {}) {
+function start(intervalMs = 1 * 60 * 30 * 1000, { monitor } = {}) {
   const execute = () => monitor ? monitor.run((context) => main({ monitor: context })) : main()
   execute()
   return setInterval(function () {
@@ -806,4 +869,4 @@ if (require.main === module) {
   start()
 }
 
-module.exports = { main, start }
+module.exports = { main, start, triggerForceApi }

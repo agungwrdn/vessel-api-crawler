@@ -304,6 +304,8 @@ model device_gpsHits {
   ID           Int         @id(map: "GPS_hist$ID") @default(autoincrement())
   LastDataTime DateTime?   @db.DateTime
   status       String?     @db.Text
+  Source       String?     @db.NVarChar(100)
+  SourceRefId  String?     @db.NVarChar(255)
   device_gps   device_gps? @relation(fields: [ObjectID], references: [id], map: "GPS_hist$gpsGPS_hist")
 
   @@index([LastDataTime(sort: Desc)], map: "_dta_index_device_gpsHits_6_773577794__K10D")

@@ -15,6 +15,7 @@ test('emits monitoring phases for port generator sources and Redis writes', asyn
   }
   const redis = { DEL: async () => {}, set: async () => {} }
   const sources = {
+    ForceApi: async () => [],
     PIM: async () => {},
     PKG: async () => {},
     PKGDischarging: async () => {},
@@ -27,6 +28,7 @@ test('emits monitoring phases for port generator sources and Redis writes', asyn
   assert.deepEqual(phases.filter((phase) => phase.endsWith(':success')).map((phase) => phase.split(':')[0]), [
     'redis-connect',
     'redis-clear',
+    'force-api-refresh',
     'fetch-port-pim',
     'fetch-port-pkg-loading',
     'fetch-port-pkg-discharging',

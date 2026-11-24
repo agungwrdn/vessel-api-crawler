@@ -189,9 +189,37 @@ test('saves the current vessel and GPS history using the GPS timestamp', async (
         Speed: 8.5,
         GPSTime: new Date('2026-08-10T00:00:00Z'),
         LastDataTime: new Date('2026-08-10T00:00:00Z'),
+        Source: 'VesselAPI',
+        SourceRefId: null,
       },
     }],
   ])
+})
+
+test('tags Telkomsat-sourced hits with their own Source value', async () => {
+  const calls = []
+  const client = {
+    device_gps: { upsert: async (args) => calls.push(['upsert', args]) },
+    device_gpsHits: {
+      create: async (args) => {
+        calls.push(['create', args])
+        return { ID: 2 }
+      },
+    },
+  }
+
+  const position = {
+    mmsi: '525018003',
+    name: 'KM SOEMANTRI BRODJONEGORO',
+    latitude: -6.907846,
+    longitude: 110.385689,
+    speed: 21.86,
+    timestamp: '2026-08-21T01:23:12.000Z',
+  }
+
+  await savePosition(position, client, 'Telkomsat my_vessel')
+
+  assert.equal(calls[1][1].data.Source, 'Telkomsat my_vessel')
 })
 
 test('fetches and saves every configured vessel', async () => {
